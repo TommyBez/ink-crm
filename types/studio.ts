@@ -10,8 +10,8 @@ export type Studio = {
 
   // Contact information
   email: string
-  phone?: string
-  website?: string
+  phone: string | null
+  website: string | null
 
   // Address information
   address_street: string
@@ -21,9 +21,9 @@ export type Studio = {
   address_country: string
 
   // Business information
-  partita_iva?: string
-  codice_fiscale?: string
-  business_name?: string
+  partita_iva: string | null
+  codice_fiscale: string | null
+  business_name: string | null
 
   // Settings and metadata
   settings: StudioSettings
@@ -58,16 +58,16 @@ export type CreateStudioInput = {
   name: string
   slug: string
   email: string
-  phone?: string
-  website?: string
+  phone?: string | null
+  website?: string | null
   address_street: string
   address_city: string
   address_province: string
   address_postal_code: string
   address_country?: string
-  partita_iva?: string
-  codice_fiscale?: string
-  business_name?: string
+  partita_iva?: string | null
+  codice_fiscale?: string | null
+  business_name?: string | null
   settings?: Partial<StudioSettings>
 }
 
