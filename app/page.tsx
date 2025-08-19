@@ -1,103 +1,134 @@
-import Image from 'next/image'
+import { Archive, FileText, Shield, Users } from 'lucide-react'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import italianContent from '@/lib/constants/italian-content'
+import { createClient } from '@/lib/supabase/server'
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Redirect authenticated users to studio
+  if (user) {
+    redirect('/studio')
+  }
+
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
-        <Image
-          alt="Next.js logo"
-          className="dark:invert"
-          height={38}
-          priority
-          src="/next.svg"
-          width={180}
-        />
-        <ol className="list-inside list-decimal text-center font-mono text-sm/6 sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-mono font-semibold dark:bg-white/[.06]">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-transparent border-solid bg-foreground px-4 font-medium text-background text-sm transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt="Vercel logomark"
-              className="dark:invert"
-              height={20}
-              src="/vercel.svg"
-              width={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 w-full items-center justify-center rounded-full border border-black/[.08] border-solid px-4 font-medium text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:w-auto sm:px-5 sm:text-base md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-b from-background to-muted/20 px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl text-center">
+          <h1 className="font-bold text-4xl tracking-tight sm:text-6xl">
+            {italianContent.app.name}
+          </h1>
+          <p className="mt-6 text-lg text-muted-foreground leading-8">
+            {italianContent.app.tagline}
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <Button asChild size="lg">
+              <Link href="/auth/sign-up">{italianContent.auth.signUp}</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/auth/login">{italianContent.auth.login}</Link>
+            </Button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Image
-            alt="File icon"
-            aria-hidden
-            height={16}
-            src="/file.svg"
-            width={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Image
-            alt="Window icon"
-            aria-hidden
-            height={16}
-            src="/window.svg"
-            width={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Image
-            alt="Globe icon"
-            aria-hidden
-            height={16}
-            src="/globe.svg"
-            width={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Features Section */}
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="font-bold text-3xl tracking-tight sm:text-4xl">
+              Tutto ciò di cui hai bisogno per gestire i consensi
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Una soluzione completa per gli studi di tatuaggi italiani
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-7xl">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader>
+                  <FileText className="mb-2 h-8 w-8 text-primary" />
+                  <CardTitle className="text-lg">
+                    Modelli Personalizzabili
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Crea e gestisci modelli di consenso personalizzati per le
+                    tue esigenze
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Shield className="mb-2 h-8 w-8 text-primary" />
+                  <CardTitle className="text-lg">Conformità GDPR</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Completamente conforme alla normativa italiana sulla privacy
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Archive className="mb-2 h-8 w-8 text-primary" />
+                  <CardTitle className="text-lg">Archivio Sicuro</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Archiviazione sicura nel cloud con ricerca avanzata
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Users className="mb-2 h-8 w-8 text-primary" />
+                  <CardTitle className="text-lg">Gestione Team</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Invita artisti e gestisci i permessi del tuo studio
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-muted/50 px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-bold text-3xl tracking-tight">
+            Inizia oggi gratuitamente
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground leading-8">
+            Registrati ora e inizia a digitalizzare i tuoi consensi
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <Button asChild size="lg">
+              <Link href="/auth/sign-up">{italianContent.auth.signUp}</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
