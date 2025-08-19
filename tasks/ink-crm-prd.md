@@ -30,8 +30,6 @@ Tattoo studios in Italy need a fast, compliant way to collect client consent and
 
 * Ensure all signed forms are archived securely and are easily searchable by studio staff.
 
-* Provide offline support for form filling and signing, with automatic sync when online.
-
 * Allow studio owners to retrieve, view, and print archived PDFs on demand.
 
 ### Non-Goals
