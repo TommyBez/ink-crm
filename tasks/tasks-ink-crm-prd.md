@@ -47,6 +47,9 @@
 - `supabase/migrations/20250819165524_create_forms_table.sql` - Migration to create forms table with RLS policies (CREATED)
 - `types/form.ts` - TypeScript types for forms and form data (CREATED)
 - `lib/supabase/forms.ts` - Database operations for forms table (CREATED)
+- `supabase/migrations/20250819170534_create_archived_pdfs_table.sql` - Migration to create archived PDFs table with RLS policies (CREATED)
+- `types/archived-pdf.ts` - TypeScript types for archived PDFs and metadata (CREATED)
+- `lib/supabase/archived-pdfs.ts` - Database operations for archived PDFs table (CREATED)
 
 ### Notes
 
@@ -66,7 +69,7 @@
   - [x] 2.2 Create `studios` table with columns for studio details and settings
   - [x] 2.3 Create `templates` table for form templates with JSON schema for fields
   - [x] 2.4 Create `forms` table for filled forms with client data and timestamps
-  - [ ] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
+  - [x] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
   - [ ] 2.6 Set up Row Level Security (RLS) policies for multi-tenant data isolation
   - [ ] 2.7 Create database indexes for performance optimization
   - [ ] 2.8 Write migration scripts and seed data for testing
