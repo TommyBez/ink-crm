@@ -16,19 +16,10 @@ import {
 } from '@/components/ui/alert-dialog'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
-import { getTemplatesByStudioId, deleteTemplate } from '@/lib/supabase/templates'
+import { getTemplatesByStudioId } from '@/lib/supabase/templates'
 import { getUserStudios } from '@/lib/supabase/studios'
+import { deleteTemplateAction } from '@/app/actions/template'
 import type { Template } from '@/types/template'
-
-async function handleDeleteTemplate(templateId: string) {
-  'use server'
-  
-  const { error } = await deleteTemplate(templateId)
-  
-  if (error) {
-    throw new Error(error)
-  }
-}
 
 export default async function TemplatesPage() {
   const supabase = await createClient()
@@ -185,7 +176,7 @@ function TemplateCard({ template }: { template: Template }) {
                 <AlertDialogCancel>
                   {italianContent.app.cancel}
                 </AlertDialogCancel>
-                <form action={handleDeleteTemplate.bind(null, template.id)}>
+                <form action={deleteTemplateAction.bind(null, template.id)}>
                   <AlertDialogAction type="submit">
                     {italianContent.app.delete}
                   </AlertDialogAction>
