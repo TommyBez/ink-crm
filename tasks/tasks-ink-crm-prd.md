@@ -64,15 +64,15 @@
   - [x] 1.3 Design and implement studio dashboard layout with sidebar navigation
   - [x] 1.4 Add responsive design for tablet and desktop views
 
-- [ ] 2.0 Create database schema and Supabase configuration
+- [x] 2.0 Create database schema and Supabase configuration
   - [x] 2.1 Set up Supabase project and configure environment variables
   - [x] 2.2 Create `studios` table with columns for studio details and settings
   - [x] 2.3 Create `templates` table for form templates with JSON schema for fields
   - [x] 2.4 Create `forms` table for filled forms with client data and timestamps
   - [x] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
-  - [ ] 2.6 Set up Row Level Security (RLS) policies for multi-tenant data isolation
-  - [ ] 2.7 Create database indexes for performance optimization
-  - [ ] 2.8 Write migration scripts and seed data for testing
+  - [x] 2.6 Set up Row Level Security (RLS) policies for multi-tenant data isolation
+  - [x] 2.7 Create database indexes for performance optimization
+  - [x] 2.8 Write migration scripts and seed data for testing
 
 - [ ] 3.0 Implement template management system
   - [ ] 3.1 Create template list page with create/edit/delete actions
