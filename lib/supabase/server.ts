@@ -37,6 +37,6 @@ export async function createClient() {
           }
         },
       },
-    }
+    },
   )
 }

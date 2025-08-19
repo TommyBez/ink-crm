@@ -1,10 +1,11 @@
 ## Relevant Files
 
 - `app/studio/page.tsx` - Main studio dashboard page (CREATED)
-- `app/studio/layout.tsx` - Studio layout with sidebar navigation (CREATED)
+- `app/studio/layout.tsx` - Studio layout with sidebar navigation (UPDATED)
 - `app/studio/error.tsx` - Studio error boundary (CREATED)
 - `app/studio/not-found.tsx` - Studio 404 page (CREATED)
 - `app/studio/loading.tsx` - Studio loading state (CREATED)
+- `components/studio/app-sidebar.tsx` - Extracted server-side sidebar component (CREATED)
 - `app/studio/page.test.tsx` - Unit tests for studio dashboard
 - `app/studio/templates/page.tsx` - Template management page
 - `app/studio/templates/page.test.tsx` - Unit tests for template management
@@ -46,7 +47,7 @@
 - [ ] 1.0 Set up basic studio structure and Italian content
   - [x] 1.1 Create Italian content constants file with all UI strings and error messages
   - [x] 1.2 Create protected `/studio` route structure with middleware authentication
-  - [ ] 1.3 Design and implement studio dashboard layout with sidebar navigation
+  - [x] 1.3 Design and implement studio dashboard layout with sidebar navigation
   - [ ] 1.4 Add responsive design for tablet and desktop views
 
 - [ ] 2.0 Create database schema and Supabase configuration
