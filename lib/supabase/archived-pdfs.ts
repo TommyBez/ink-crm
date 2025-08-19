@@ -77,7 +77,7 @@ export async function getArchivedPDFById(
     .from('archived_pdfs')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
@@ -109,7 +109,7 @@ export async function getArchivedPDFWithRelations(
       )
     `)
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null

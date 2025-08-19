@@ -32,7 +32,7 @@ export const getTemplateById = async (id: string): Promise<Template | null> => {
     .from('templates')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
@@ -52,7 +52,7 @@ export const getTemplateBySlug = async (
     .select('*')
     .eq('studio_id', studioId)
     .eq('slug', slug)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
