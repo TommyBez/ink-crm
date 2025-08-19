@@ -28,7 +28,7 @@
 - `lib/supabase/storage.test.ts` - Unit tests for storage operations
 - `types/template.ts` - TypeScript types for templates
 - `types/form.ts` - TypeScript types for forms
-- `lib/constants/italian-content.ts` - Italian text constants and messages
+- `lib/constants/italian-content.ts` - Italian text constants and messages (CREATED)
 
 ### Notes
 
@@ -38,7 +38,7 @@
 ## Tasks
 
 - [ ] 1.0 Set up basic studio structure and Italian content
-  - [ ] 1.1 Create Italian content constants file with all UI strings and error messages
+  - [x] 1.1 Create Italian content constants file with all UI strings and error messages
   - [ ] 1.2 Create protected `/studio` route structure with middleware authentication
   - [ ] 1.3 Design and implement studio dashboard layout with sidebar navigation
   - [ ] 1.4 Add responsive design for tablet and desktop views
