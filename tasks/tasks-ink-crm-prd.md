@@ -36,6 +36,8 @@
 - `lib/constants/italian-content.ts` - Italian text constants and messages (CREATED)
 - `app/page.tsx` - Landing page with Italian content and authentication redirect (UPDATED)
 - `components/logout-button.tsx` - Logout button component with Italian text (UPDATED)
+- `docs/supabase-setup.md` - Supabase setup guide and configuration instructions (CREATED)
+- `README.md` - Project documentation with setup instructions (UPDATED)
 
 ### Notes
 
@@ -51,7 +53,7 @@
   - [x] 1.4 Add responsive design for tablet and desktop views
 
 - [ ] 2.0 Create database schema and Supabase configuration
-  - [ ] 2.1 Set up Supabase project and configure environment variables
+  - [x] 2.1 Set up Supabase project and configure environment variables
   - [ ] 2.2 Create `studios` table with columns for studio details and settings
   - [ ] 2.3 Create `templates` table for form templates with JSON schema for fields
   - [ ] 2.4 Create `forms` table for filled forms with client data and timestamps
