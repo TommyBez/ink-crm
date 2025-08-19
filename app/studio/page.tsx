@@ -34,8 +34,8 @@ export default async function StudioDashboard() {
           {italianContent.studio.quickActions}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
-          <Link href="/studio/forms/new">
-            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+          <Link className="h-full" href="/studio/forms/new">
+            <Card className="group h-full cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
                 <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.newForm}
@@ -52,8 +52,8 @@ export default async function StudioDashboard() {
             </Card>
           </Link>
 
-          <Link href="/studio/templates">
-            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+          <Link className="h-full" href="/studio/templates">
+            <Card className="group h-full cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
                 <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.templates}
@@ -70,8 +70,8 @@ export default async function StudioDashboard() {
             </Card>
           </Link>
 
-          <Link href="/studio/archive">
-            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+          <Link className="h-full" href="/studio/archive">
+            <Card className="group h-full cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
                 <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.archive}
@@ -88,8 +88,8 @@ export default async function StudioDashboard() {
             </Card>
           </Link>
 
-          <Link href="/studio/settings">
-            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+          <Link className="h-full" href="/studio/settings">
+            <Card className="group h-full cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
                 <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.settings}
