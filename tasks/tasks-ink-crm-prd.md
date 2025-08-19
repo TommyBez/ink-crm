@@ -44,7 +44,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Set up basic studio structure and Italian content
+- [x] 1.0 Set up basic studio structure and Italian content
   - [x] 1.1 Create Italian content constants file with all UI strings and error messages
   - [x] 1.2 Create protected `/studio` route structure with middleware authentication
   - [x] 1.3 Design and implement studio dashboard layout with sidebar navigation
