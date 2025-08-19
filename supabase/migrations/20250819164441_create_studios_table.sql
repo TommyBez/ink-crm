@@ -90,14 +90,8 @@ create policy "studios_authenticated_select_policy"
   for select
   to authenticated
   using (
-    owner_id = auth.uid() or
-    -- future: add logic for team members to view studio
-    exists (
-      select 1 from public.studio_members
-      where studio_members.studio_id = studios.id
-      and studio_members.user_id = auth.uid()
-      and studio_members.is_active = true
-    )
+    owner_id = auth.uid()
+    -- TODO: Add membership-based access once studio_members table is created
   );
 
 -- authenticated users can create a studio (they become the owner)
