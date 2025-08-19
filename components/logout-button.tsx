@@ -16,9 +16,16 @@ export function LogoutButton() {
   }
 
   return (
-    <Button className="w-full justify-start" onClick={logout} variant="ghost">
-      <LogOut className="mr-2 h-4 w-4" />
-      {italianContent.auth.logout}
+    <Button
+      className="w-full justify-start text-muted-foreground hover:text-foreground"
+      onClick={logout}
+      size="sm"
+      variant="ghost"
+    >
+      <LogOut className="h-4 w-4 md:h-5 md:w-5" />
+      <span className="ml-2 group-data-[collapsible=icon]:hidden">
+        {italianContent.auth.logout}
+      </span>
     </Button>
   )
 }

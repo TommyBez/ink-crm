@@ -54,20 +54,28 @@ export async function AppSidebar() {
   ]
 
   return (
-    <Sidebar>
-      <SidebarHeader className="px-6 py-4">
-        <Link className="flex items-center space-x-2" href="/studio">
-          <span className="font-bold text-xl">{italianContent.app.name}</span>
+    <Sidebar className="border-r">
+      <SidebarHeader className="px-2 py-3 md:px-4 md:py-4">
+        <Link
+          className="flex items-center gap-2 px-2 py-1 transition-colors hover:text-foreground"
+          href="/studio"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground md:h-10 md:w-10">
+            <span className="font-bold text-lg md:text-xl">I</span>
+          </div>
+          <span className="font-bold text-lg group-data-[collapsible=icon]:hidden md:text-xl">
+            {italianContent.app.name}
+          </span>
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-2">
+      <SidebarContent className="px-2 py-2 md:px-3">
         <SidebarMenu>
           {navigationItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton asChild>
-                <Link className="flex items-center space-x-3" href={item.href}>
-                  <item.icon className="h-5 w-5" />
+              <SidebarMenuButton asChild tooltip={item.title}>
+                <Link href={item.href}>
+                  <item.icon className="h-4 w-4 md:h-5 md:w-5" />
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
@@ -76,17 +84,22 @@ export async function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t px-3 py-2">
+      <SidebarFooter className="mt-auto border-t px-2 py-2 md:px-3">
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex flex-col space-y-2 px-3 py-2">
+            <div className="group-data-[collapsible=icon]:hidden">
               {user?.email && (
-                <span className="truncate text-muted-foreground text-xs">
-                  {user.email}
-                </span>
+                <div className="mb-2 px-2 py-1">
+                  <p className="font-medium text-muted-foreground text-xs">
+                    Account
+                  </p>
+                  <p className="truncate text-muted-foreground text-xs">
+                    {user.email}
+                  </p>
+                </div>
               )}
-              <LogoutButton />
             </div>
+            <LogoutButton />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

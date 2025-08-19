@@ -17,33 +17,35 @@ export default async function StudioDashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Welcome Section */}
-      <div>
-        <h1 className="font-bold text-3xl tracking-tight">
+      <div className="space-y-1 md:space-y-2">
+        <h1 className="font-bold text-2xl tracking-tight md:text-3xl lg:text-4xl">
           {italianContent.studio.welcome}
         </h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground text-sm md:text-base">
           {italianContent.studio.overview}
         </p>
       </div>
 
       {/* Quick Actions */}
-      <section>
-        <h2 className="mb-4 font-semibold text-xl">
+      <section className="space-y-3 md:space-y-4">
+        <h2 className="font-semibold text-lg md:text-xl lg:text-2xl">
           {italianContent.studio.quickActions}
         </h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
           <Link href="/studio/forms/new">
-            <Card className="cursor-pointer transition-shadow hover:shadow-lg">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="font-medium text-sm">
+            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
+                <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.newForm}
                 </CardTitle>
-                <Plus className="h-4 w-4 text-muted-foreground" />
+                <div className="rounded-lg bg-primary/10 p-2 transition-colors group-hover:bg-primary/20">
+                  <Plus className="h-4 w-4 text-primary md:h-5 md:w-5" />
+                </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-xs">
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   {italianContent.forms.selectTemplate}
                 </p>
               </CardContent>
@@ -51,15 +53,17 @@ export default async function StudioDashboard() {
           </Link>
 
           <Link href="/studio/templates">
-            <Card className="cursor-pointer transition-shadow hover:shadow-lg">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="font-medium text-sm">
+            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
+                <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.templates}
                 </CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
+                <div className="rounded-lg bg-primary/10 p-2 transition-colors group-hover:bg-primary/20">
+                  <FileText className="h-4 w-4 text-primary md:h-5 md:w-5" />
+                </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-xs">
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   {italianContent.templates.subtitle}
                 </p>
               </CardContent>
@@ -67,15 +71,17 @@ export default async function StudioDashboard() {
           </Link>
 
           <Link href="/studio/archive">
-            <Card className="cursor-pointer transition-shadow hover:shadow-lg">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="font-medium text-sm">
+            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
+                <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.archive}
                 </CardTitle>
-                <Archive className="h-4 w-4 text-muted-foreground" />
+                <div className="rounded-lg bg-primary/10 p-2 transition-colors group-hover:bg-primary/20">
+                  <Archive className="h-4 w-4 text-primary md:h-5 md:w-5" />
+                </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-xs">
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   {italianContent.archive.subtitle}
                 </p>
               </CardContent>
@@ -83,15 +89,17 @@ export default async function StudioDashboard() {
           </Link>
 
           <Link href="/studio/settings">
-            <Card className="cursor-pointer transition-shadow hover:shadow-lg">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="font-medium text-sm">
+            <Card className="group cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
+                <CardTitle className="font-medium text-sm md:text-base">
                   {italianContent.navigation.settings}
                 </CardTitle>
-                <Settings className="h-4 w-4 text-muted-foreground" />
+                <div className="rounded-lg bg-primary/10 p-2 transition-colors group-hover:bg-primary/20">
+                  <Settings className="h-4 w-4 text-primary md:h-5 md:w-5" />
+                </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-xs">
+              <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   {italianContent.settings.studio}
                 </p>
               </CardContent>
@@ -101,21 +109,36 @@ export default async function StudioDashboard() {
       </section>
 
       {/* Recent Forms */}
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-semibold text-xl">
+      <section className="space-y-3 md:space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="font-semibold text-lg md:text-xl lg:text-2xl">
             {italianContent.studio.recentForms}
           </h2>
-          <Button asChild variant="outline">
+          <Button
+            asChild
+            className="w-full sm:w-auto"
+            size="sm"
+            variant="outline"
+          >
             <Link href="/studio/archive">
               {italianContent.archive.view} {italianContent.app.actions}
             </Link>
           </Button>
         </div>
         <Card>
-          <CardContent className="pt-6">
-            <div className="py-8 text-center text-muted-foreground">
-              {italianContent.studio.noRecentForms}
+          <CardContent className="p-6 md:p-8">
+            <div className="flex flex-col items-center justify-center py-8 text-center md:py-12">
+              <div className="mb-4 rounded-full bg-muted p-4">
+                <FileText className="h-8 w-8 text-muted-foreground md:h-10 md:w-10" />
+              </div>
+              <p className="text-muted-foreground text-sm md:text-base">
+                {italianContent.studio.noRecentForms}
+              </p>
+              <Button asChild className="mt-4" size="sm">
+                <Link href="/studio/forms/new">
+                  {italianContent.navigation.newForm}
+                </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
