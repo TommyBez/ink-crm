@@ -42,8 +42,11 @@
 - `types/studio.ts` - TypeScript types for Studio entities (CREATED)
 - `lib/supabase/studios.ts` - Database operations for studios table (CREATED)
  - `supabase/migrations/20250819170000_create_templates_table.sql` - Migration to create templates table with RLS policies (CREATED)
- - `types/template.ts` - TypeScript types for templates and template schema (CREATED)
- - `lib/supabase/templates.ts` - Database operations for templates table (CREATED)
+- `types/template.ts` - TypeScript types for templates and template schema (CREATED)
+- `lib/supabase/templates.ts` - Database operations for templates table (CREATED)
+- `supabase/migrations/20250819165524_create_forms_table.sql` - Migration to create forms table with RLS policies (CREATED)
+- `types/form.ts` - TypeScript types for forms and form data (CREATED)
+- `lib/supabase/forms.ts` - Database operations for forms table (CREATED)
 
 ### Notes
 
@@ -62,7 +65,7 @@
   - [x] 2.1 Set up Supabase project and configure environment variables
   - [x] 2.2 Create `studios` table with columns for studio details and settings
   - [x] 2.3 Create `templates` table for form templates with JSON schema for fields
-  - [ ] 2.4 Create `forms` table for filled forms with client data and timestamps
+  - [x] 2.4 Create `forms` table for filled forms with client data and timestamps
   - [ ] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
   - [ ] 2.6 Set up Row Level Security (RLS) policies for multi-tenant data isolation
   - [ ] 2.7 Create database indexes for performance optimization
