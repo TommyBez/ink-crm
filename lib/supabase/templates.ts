@@ -86,7 +86,7 @@ export const createTemplate = async (
     .select('id')
     .eq('studio_id', input.studio_id)
     .eq('slug', slug)
-    .single()
+    .maybeSingle()
 
   if (existing) {
     return { template: null, error: 'Questo identificativo URL è già in uso' }
@@ -134,7 +134,7 @@ export const updateTemplate = async (
       .eq('studio_id', current.studio_id)
       .eq('slug', input.slug)
       .neq('id', id)
-      .single()
+      .maybeSingle()
 
     if (existing) {
       return { template: null, error: 'Questo identificativo URL è già in uso' }

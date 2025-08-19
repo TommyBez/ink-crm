@@ -15,7 +15,7 @@ export async function getStudioById(id: string): Promise<Studio | null> {
     .from('studios')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
@@ -34,7 +34,7 @@ export async function getStudioBySlug(slug: string): Promise<Studio | null> {
     .from('studios')
     .select('*')
     .eq('slug', slug)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
@@ -84,7 +84,7 @@ export async function createStudio(
     .from('studios')
     .select('id')
     .eq('slug', input.slug)
-    .single()
+    .maybeSingle()
 
   if (existingStudio) {
     return { studio: null, error: 'Questo identificativo URL è già in uso' }
@@ -125,7 +125,7 @@ export async function updateStudio(
       .select('id')
       .eq('slug', input.slug)
       .neq('id', id)
-      .single()
+      .maybeSingle()
 
     if (existingStudio) {
       return { studio: null, error: 'Questo identificativo URL è già in uso' }

@@ -47,7 +47,7 @@ export async function getFormById(id: string): Promise<Form | null> {
     .from('forms')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
@@ -75,7 +75,7 @@ export async function getFormWithTemplate(
       )
     `)
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null

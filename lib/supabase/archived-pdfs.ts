@@ -132,7 +132,7 @@ export async function getArchivedPDFByFormId(
     .eq('form_id', formId)
     .order('created_at', { ascending: false })
     .limit(1)
-    .single()
+    .maybeSingle()
 
   if (error) {
     return null
