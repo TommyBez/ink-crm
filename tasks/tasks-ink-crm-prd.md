@@ -28,8 +28,7 @@
 - `lib/supabase/storage.test.ts` - Unit tests for storage operations
 - `types/template.ts` - TypeScript types for templates
 - `types/form.ts` - TypeScript types for forms
-- `locales/it.json` - Italian language translations
-- `app/layout.tsx` - Update root layout for Italian language
+- `lib/constants/italian-content.ts` - Italian text constants and messages
 
 ### Notes
 
@@ -38,13 +37,11 @@
 
 ## Tasks
 
-- [ ] 1.0 Set up Italian language support and basic studio structure
-  - [ ] 1.1 Install and configure i18n library (next-intl or similar) for Italian language support
-  - [ ] 1.2 Create Italian translation file with all UI strings and error messages
-  - [ ] 1.3 Update root layout to set Italian as default language and configure locale
-  - [ ] 1.4 Create protected `/studio` route structure with middleware authentication
-  - [ ] 1.5 Design and implement studio dashboard layout with sidebar navigation
-  - [ ] 1.6 Add responsive design for tablet and desktop views
+- [ ] 1.0 Set up basic studio structure and Italian content
+  - [ ] 1.1 Create Italian content constants file with all UI strings and error messages
+  - [ ] 1.2 Create protected `/studio` route structure with middleware authentication
+  - [ ] 1.3 Design and implement studio dashboard layout with sidebar navigation
+  - [ ] 1.4 Add responsive design for tablet and desktop views
 
 - [ ] 2.0 Create database schema and Supabase configuration
   - [ ] 2.1 Set up Supabase project and configure environment variables
@@ -117,7 +114,7 @@
   - [ ] 8.8 Create account settings page for studio profile
 
 - [ ] 9.0 Polish UI/UX and finalize deployment
-  - [ ] 9.1 Conduct Italian language review with native speaker
+  - [ ] 9.1 Conduct content review for accuracy and compliance
   - [ ] 9.2 Optimize for touch interfaces with larger tap targets
   - [ ] 9.3 Add loading states and skeleton screens
   - [ ] 9.4 Implement error boundaries and user-friendly error pages
@@ -126,4 +123,4 @@
   - [ ] 9.7 Set up production environment variables and secrets
   - [ ] 9.8 Configure monitoring and error tracking (Sentry or similar)
   - [ ] 9.9 Create deployment pipeline and backup strategy
-  - [ ] 9.10 Write user documentation in Italian
+  - [ ] 9.10 Write user documentation
