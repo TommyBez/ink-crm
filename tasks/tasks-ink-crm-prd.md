@@ -48,7 +48,7 @@
   - [x] 1.1 Create Italian content constants file with all UI strings and error messages
   - [x] 1.2 Create protected `/studio` route structure with middleware authentication
   - [x] 1.3 Design and implement studio dashboard layout with sidebar navigation
-  - [ ] 1.4 Add responsive design for tablet and desktop views
+  - [x] 1.4 Add responsive design for tablet and desktop views
 
 - [ ] 2.0 Create database schema and Supabase configuration
   - [ ] 2.1 Set up Supabase project and configure environment variables
