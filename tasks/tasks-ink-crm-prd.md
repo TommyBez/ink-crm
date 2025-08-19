@@ -38,6 +38,9 @@
 - `components/logout-button.tsx` - Logout button component with Italian text (UPDATED)
 - `docs/supabase-setup.md` - Supabase setup guide and configuration instructions (CREATED)
 - `README.md` - Project documentation with setup instructions (UPDATED)
+- `supabase/migrations/20250819164441_create_studios_table.sql` - Migration to create studios table with RLS policies (CREATED)
+- `types/studio.ts` - TypeScript types for Studio entities (CREATED)
+- `lib/supabase/studios.ts` - Database operations for studios table (CREATED)
 
 ### Notes
 
@@ -54,7 +57,7 @@
 
 - [ ] 2.0 Create database schema and Supabase configuration
   - [x] 2.1 Set up Supabase project and configure environment variables
-  - [ ] 2.2 Create `studios` table with columns for studio details and settings
+  - [x] 2.2 Create `studios` table with columns for studio details and settings
   - [ ] 2.3 Create `templates` table for form templates with JSON schema for fields
   - [ ] 2.4 Create `forms` table for filled forms with client data and timestamps
   - [ ] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
