@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ink CRM - Digital Consent Form Management for Tattoo Studios
+
+A modern web application for Italian tattoo studios to digitally manage consent forms, client information, and document archival.
+
+## Features
+
+- 📝 Digital consent form creation and management
+- ✍️ Touch-enabled signature capture
+- 📄 Automatic PDF generation and archival
+- 🔍 Advanced search and retrieval system
+- 🔒 Secure multi-tenant architecture
+- 🇮🇹 Fully Italian interface
+
+## Prerequisites
+
+- Node.js 18+ and pnpm
+- A Supabase account (free tier available)
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone https://github.com/yourusername/ink-crm.git
+cd ink-crm
+```
+
+### 2. Install dependencies [[memory:2582683]]
+
+```bash
+pnpm install
+```
+
+### 3. Set up Supabase
+
+1. Create a new project at [app.supabase.com](https://app.supabase.com)
+2. Get your API keys from Project Settings > API
+3. Create a `.env.local` file in the project root:
+
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+# Server-side only (keep secret)
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+See [docs/supabase-setup.md](docs/supabase-setup.md) for detailed setup instructions.
+
+### 4. Run the development server
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+ink-crm/
+├── app/                    # Next.js app directory
+│   ├── auth/              # Authentication pages
+│   └── studio/            # Protected studio dashboard
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   └── studio/           # Studio-specific components
+├── lib/                   # Utility functions and configurations
+│   ├── supabase/         # Supabase client configurations
+│   └── constants/        # Application constants
+├── docs/                  # Documentation
+└── tasks/                 # Project tasks and PRD
+```
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+### Running Tests
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm test              # Run all tests
+pnpm test:watch       # Run tests in watch mode
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Code Quality
 
-## Deploy on Vercel
+The project uses Biome for linting and formatting:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm lint             # Check for linting errors
+pnpm format           # Format code
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Authentication
+
+The application uses Supabase Auth with:
+- Email/password authentication
+- Protected routes using Next.js middleware
+- Role-based access control (owner, artist, admin)
+
+## Database Schema
+
+The application uses the following main tables:
+- `studios` - Studio information and settings
+- `templates` - Form templates with JSON schema
+- `forms` - Filled forms with client data
+- `archived_pdfs` - Metadata for stored PDFs
+
+## Deployment
+
+### Deploy on Vercel
+
+1. Push your code to GitHub
+2. Import your repository on [Vercel](https://vercel.com)
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
+### Deploy on other platforms
+
+The app can be deployed on any platform that supports Next.js:
+- Railway
+- Netlify
+- AWS Amplify
+- Self-hosted with Docker
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
+
+## License
+
+This project is licensed under the MIT License.
