@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import { expect, vi } from 'vitest'
 
 // Mock Next.js navigation
 vi.mock('next/navigation', () => ({
@@ -15,7 +16,15 @@ vi.mock('next/navigation', () => ({
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
   __esModule: true,
-  default: ({ children, href, ...props }: any) => {
+  default: ({
+    children,
+    href,
+    ...props
+  }: {
+    children: React.ReactNode
+    href: string
+    [key: string]: unknown
+  }) => {
     const React = require('react')
     return React.createElement('a', { href, ...props }, children)
   },
@@ -30,9 +39,10 @@ expect.extend({
     const pass = received !== null && document.body.contains(received)
     return {
       pass,
-      message: () => pass
-        ? `expected element not to be in the document`
-        : `expected element to be in the document`,
+      message: () =>
+        pass
+          ? 'expected element not to be in the document'
+          : 'expected element to be in the document',
     }
   },
 })

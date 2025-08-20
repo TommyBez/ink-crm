@@ -1,8 +1,7 @@
-import { Plus, Edit2, Trash2, FileText } from 'lucide-react'
+import { Edit2, FileText, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { deleteTemplateAction } from '@/app/actions/template'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,11 +13,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
-import { getTemplatesByStudioId } from '@/lib/supabase/templates'
 import { getUserStudios } from '@/lib/supabase/studios'
-import { deleteTemplateAction } from '@/app/actions/template'
+import { getTemplatesByStudioId } from '@/lib/supabase/templates'
 import type { Template } from '@/types/template'
 
 export default async function TemplatesPage() {
@@ -33,11 +39,11 @@ export default async function TemplatesPage() {
 
   // Get user's studios
   const studios = await getUserStudios()
-  
+
   // For now, we'll use the first studio
   // In the future, we might want to add studio selection
   const currentStudio = studios[0]
-  
+
   if (!currentStudio) {
     redirect('/studio')
   }
@@ -101,11 +107,14 @@ export default async function TemplatesPage() {
 
 function TemplateCard({ template }: { template: Template }) {
   const fieldCount = template.schema.fields.length
-  const lastModified = new Date(template.updated_at).toLocaleDateString('it-IT', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+  const lastModified = new Date(template.updated_at).toLocaleDateString(
+    'it-IT',
+    {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    },
+  )
 
   return (
     <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
@@ -122,39 +131,36 @@ function TemplateCard({ template }: { template: Template }) {
             )}
           </div>
           {template.is_default && (
-            <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+            <span className="rounded-full bg-primary/10 px-2 py-1 font-medium text-primary text-xs">
               Default
             </span>
           )}
         </div>
       </CardHeader>
       <CardContent className="space-y-4 pb-4">
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <span>{fieldCount} {italianContent.templates.fields}</span>
+        <div className="flex items-center gap-4 text-muted-foreground text-sm">
+          <span>
+            {fieldCount} {italianContent.templates.fields}
+          </span>
           <span className="text-xs">•</span>
           <span className="text-xs">{lastModified}</span>
         </div>
-        
+
         <div className="flex gap-2">
-          <Button
-            asChild
-            size="sm"
-            variant="outline"
-            className="flex-1"
-          >
+          <Button asChild className="flex-1" size="sm" variant="outline">
             <Link href={`/studio/templates/${template.id}`}>
               <Edit2 className="mr-2 h-3 w-3" />
               {italianContent.app.edit}
             </Link>
           </Button>
-          
+
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
-                size="sm"
-                variant="outline"
                 className="px-3"
                 disabled={template.is_default}
+                size="sm"
+                variant="outline"
               >
                 <Trash2 className="h-3 w-3" />
               </Button>

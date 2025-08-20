@@ -1,7 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import italianContent from '../../../lib/constants/italian-content'
 import TemplatesPage from './page'
-import italianContent from '@/lib/constants/italian-content'
+
+// Regex patterns
+const italianDatePattern = /15 gennaio 2024/i
 
 // Mock all the dependencies
 vi.mock('next/navigation', () => ({
@@ -24,10 +28,11 @@ vi.mock('@/app/actions/template', () => ({
   deleteTemplateAction: vi.fn().mockImplementation(() => Promise.resolve()),
 }))
 
-const { redirect } = await import('next/navigation')
-const { createClient } = await import('@/lib/supabase/server')
-const { getUserStudios } = await import('@/lib/supabase/studios')
-const { getTemplatesByStudioId } = await import('@/lib/supabase/templates')
+const { createClient } = await import('../../../lib/supabase/server')
+const { getUserStudios } = await import('../../../lib/supabase/studios')
+const { getTemplatesByStudioId } = await import(
+  '../../../lib/supabase/templates'
+)
 
 describe('TemplatesPage', () => {
   const mockUser = { id: 'user-123', email: 'test@example.com' }
@@ -39,6 +44,22 @@ describe('TemplatesPage', () => {
     is_active: true,
     created_at: '2024-01-01',
     updated_at: '2024-01-01',
+    // Contact information
+    email: 'test@studio.com',
+    phone: null,
+    website: null,
+    // Address information
+    address_street: 'Via Test 123',
+    address_city: 'Milano',
+    address_province: 'MI',
+    address_postal_code: '20100',
+    address_country: 'Italia',
+    // Business information
+    partita_iva: null,
+    codice_fiscale: null,
+    business_name: null,
+    // Settings
+    settings: {},
   }
 
   beforeEach(() => {
@@ -51,7 +72,9 @@ describe('TemplatesPage', () => {
         getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
       },
     }
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    vi.mocked(createClient).mockResolvedValue(
+      mockSupabase as unknown as SupabaseClient,
+    )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([])
 
@@ -59,12 +82,20 @@ describe('TemplatesPage', () => {
     render(Component)
 
     expect(screen.getByText(italianContent.templates.title)).toBeInTheDocument()
-    expect(screen.getByText(italianContent.templates.subtitle)).toBeInTheDocument()
-    expect(screen.getByText(italianContent.templates.noTemplates)).toBeInTheDocument()
-    expect(screen.getByText(italianContent.templates.createFirst)).toBeInTheDocument()
-    
+    expect(
+      screen.getByText(italianContent.templates.subtitle),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(italianContent.templates.noTemplates),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(italianContent.templates.createFirst),
+    ).toBeInTheDocument()
+
     // Should have create template buttons
-    const createButtons = screen.getAllByText(italianContent.templates.createTemplate)
+    const createButtons = screen.getAllByText(
+      italianContent.templates.createTemplate,
+    )
     expect(createButtons).toHaveLength(2) // One in header, one in empty state
   })
 
@@ -79,7 +110,12 @@ describe('TemplatesPage', () => {
         schema: {
           fields: [
             { id: '1', type: 'text' as const, label: 'Nome', required: true },
-            { id: '2', type: 'signature' as const, label: 'Firma', required: true },
+            {
+              id: '2',
+              type: 'signature' as const,
+              label: 'Firma',
+              required: true,
+            },
           ],
         },
         is_default: false,
@@ -95,9 +131,24 @@ describe('TemplatesPage', () => {
         description: 'Modulo per consenso minori con genitori',
         schema: {
           fields: [
-            { id: '1', type: 'text' as const, label: 'Nome Minore', required: true },
-            { id: '2', type: 'text' as const, label: 'Nome Genitore', required: true },
-            { id: '3', type: 'signature' as const, label: 'Firma Genitore', required: true },
+            {
+              id: '1',
+              type: 'text' as const,
+              label: 'Nome Minore',
+              required: true,
+            },
+            {
+              id: '2',
+              type: 'text' as const,
+              label: 'Nome Genitore',
+              required: true,
+            },
+            {
+              id: '3',
+              type: 'signature' as const,
+              label: 'Firma Genitore',
+              required: true,
+            },
           ],
         },
         is_default: true,
@@ -112,7 +163,9 @@ describe('TemplatesPage', () => {
         getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
       },
     }
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    vi.mocked(createClient).mockResolvedValue(
+      mockSupabase as unknown as SupabaseClient,
+    )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue(mockTemplates)
 
@@ -121,16 +174,26 @@ describe('TemplatesPage', () => {
 
     // Check page header
     expect(screen.getByText(italianContent.templates.title)).toBeInTheDocument()
-    expect(screen.getByText(italianContent.templates.subtitle)).toBeInTheDocument()
+    expect(
+      screen.getByText(italianContent.templates.subtitle),
+    ).toBeInTheDocument()
 
     // Check templates are displayed
     expect(screen.getByText('Consenso Tatuaggio')).toBeInTheDocument()
-    expect(screen.getByText('Modulo standard per consenso tatuaggio')).toBeInTheDocument()
-    expect(screen.getByText('2 ' + italianContent.templates.fields)).toBeInTheDocument()
+    expect(
+      screen.getByText('Modulo standard per consenso tatuaggio'),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`2 ${italianContent.templates.fields}`),
+    ).toBeInTheDocument()
 
     expect(screen.getByText('Consenso Minori')).toBeInTheDocument()
-    expect(screen.getByText('Modulo per consenso minori con genitori')).toBeInTheDocument()
-    expect(screen.getByText('3 ' + italianContent.templates.fields)).toBeInTheDocument()
+    expect(
+      screen.getByText('Modulo per consenso minori con genitori'),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`3 ${italianContent.templates.fields}`),
+    ).toBeInTheDocument()
 
     // Check default badge
     expect(screen.getByText('Default')).toBeInTheDocument()
@@ -158,7 +221,9 @@ describe('TemplatesPage', () => {
         getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
       },
     }
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    vi.mocked(createClient).mockResolvedValue(
+      mockSupabase as unknown as SupabaseClient,
+    )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([mockTemplate])
 
@@ -166,7 +231,7 @@ describe('TemplatesPage', () => {
     render(Component)
 
     // Check Italian date format
-    expect(screen.getByText(/15 gennaio 2024/)).toBeInTheDocument()
+    expect(screen.getByText(italianDatePattern)).toBeInTheDocument()
   })
 
   it('shows correct field count for templates', async () => {
@@ -195,7 +260,9 @@ describe('TemplatesPage', () => {
         getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
       },
     }
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    vi.mocked(createClient).mockResolvedValue(
+      mockSupabase as unknown as SupabaseClient,
+    )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([mockTemplate])
 
@@ -203,7 +270,9 @@ describe('TemplatesPage', () => {
     render(Component)
 
     // Check field count
-    expect(screen.getByText('5 ' + italianContent.templates.fields)).toBeInTheDocument()
+    expect(
+      screen.getByText(`5 ${italianContent.templates.fields}`),
+    ).toBeInTheDocument()
   })
 
   it('disables delete button for default templates', async () => {
@@ -237,7 +306,9 @@ describe('TemplatesPage', () => {
         getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
       },
     }
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
+    vi.mocked(createClient).mockResolvedValue(
+      mockSupabase as unknown as SupabaseClient,
+    )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue(mockTemplates)
 
@@ -249,7 +320,7 @@ describe('TemplatesPage', () => {
     let disabledCount = 0
     let enabledCount = 0
 
-    deleteButtons.forEach(button => {
+    for (const button of deleteButtons) {
       // Check if button contains the trash icon by looking at its content
       const svg = button.querySelector('svg')
       if (svg && button.getAttribute('disabled') !== null) {
@@ -257,7 +328,7 @@ describe('TemplatesPage', () => {
       } else if (svg && button.getAttribute('disabled') === null) {
         enabledCount++
       }
-    })
+    }
 
     // Should have one disabled delete button (for default template)
     // and one enabled delete button (for custom template)
