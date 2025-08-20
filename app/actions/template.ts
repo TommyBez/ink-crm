@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { deleteTemplate } from '@/lib/supabase/templates'
 
-export async function deleteTemplateAction(templateId: string) {
+export async function deleteTemplateAction(templateId: string): Promise<void> {
   const { success, error } = await deleteTemplate(templateId)
   
   if (!success || error) {
@@ -12,6 +12,4 @@ export async function deleteTemplateAction(templateId: string) {
   
   // Revalidate the templates page to show updated list
   revalidatePath('/studio/templates')
-  
-  return { success }
 }
