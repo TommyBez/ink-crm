@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import { MemberList } from '@/components/studio/member-list'
+import { InvitationList } from '@/components/studio/invitation-list'
 import { InviteMemberDialog } from '@/components/studio/invite-member-dialog'
 import { Button } from '@/components/ui/button'
-import { UserPlus } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { UserPlus, Users, Mail } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getUserStudio } from '@/lib/supabase/studios'
 import { useEffect } from 'react'
@@ -70,16 +72,40 @@ export default function MembersPage() {
           </Button>
         </div>
 
-        <MemberList 
-          studioId={studioId}
-          onMemberAdded={() => setShowInviteDialog(true)}
-          onMemberRemoved={() => {
-            // Refresh handled by MemberList component
-          }}
-          onMemberUpdated={() => {
-            // Refresh handled by MemberList component
-          }}
-        />
+        <Tabs defaultValue="members" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="members" className="flex items-center space-x-2">
+              <Users className="h-4 w-4" />
+              <span>Membri</span>
+            </TabsTrigger>
+            <TabsTrigger value="invitations" className="flex items-center space-x-2">
+              <Mail className="h-4 w-4" />
+              <span>Inviti</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="members" className="mt-6">
+            <MemberList 
+              studioId={studioId}
+              onMemberAdded={() => setShowInviteDialog(true)}
+              onMemberRemoved={() => {
+                // Refresh handled by MemberList component
+              }}
+              onMemberUpdated={() => {
+                // Refresh handled by MemberList component
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="invitations" className="mt-6">
+            <InvitationList 
+              studioId={studioId}
+              onInvitationUpdated={() => {
+                // Refresh handled by InvitationList component
+              }}
+            />
+          </TabsContent>
+        </Tabs>
 
         <InviteMemberDialog
           open={showInviteDialog}

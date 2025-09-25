@@ -61,14 +61,14 @@
   - [x] 6.3 Add member count indicator to studio dashboard
   - [x] 6.4 Update studio header to show current user's role
   - [x] 6.5 Add role-based navigation visibility (hide admin features for non-admins)
-- [ ] 7.0 Add Studio Member Invitation System
-  - [ ] 7.1 Create invitation table to store pending invitations
-  - [ ] 7.2 Create sendInvitation function to invite users by email
-  - [ ] 7.3 Create acceptInvitation function to accept pending invitations
-  - [ ] 7.4 Create declineInvitation function to decline invitations
-  - [ ] 7.5 Create InvitationForm component for sending invitations
-  - [ ] 7.6 Create InvitationList component for managing pending invitations
-  - [ ] 7.7 Add email templates for invitation notifications
+- [x] 7.0 Add Studio Member Invitation System
+  - [x] 7.1 Create invitation table to store pending invitations
+  - [x] 7.2 Create sendInvitation function to invite users by email
+  - [x] 7.3 Create acceptInvitation function to accept pending invitations
+  - [x] 7.4 Create declineInvitation function to decline invitations
+  - [x] 7.5 Create InvitationForm component for sending invitations
+  - [x] 7.6 Create InvitationList component for managing pending invitations
+  - [x] 7.7 Add email templates for invitation notifications
 - [ ] 8.0 Update Authentication and Authorization Logic
   - [ ] 8.1 Update middleware to check studio membership, not just ownership
   - [ ] 8.2 Update studio layout to redirect non-members appropriately

@@ -16,6 +16,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Mail, UserPlus } from 'lucide-react'
 import { RoleSelector } from './role-selector'
+import { sendInvitation } from '@/lib/supabase/studio-invitations'
 import type { StudioMemberRole } from '@/types/studio-member'
 
 interface InviteMemberDialogProps {
@@ -54,22 +55,27 @@ export function InviteMemberDialog({
       setLoading(true)
       setError(null)
 
-      // TODO: Implement actual invitation logic
-      // This would typically involve:
-      // 1. Creating an invitation record in the database
-      // 2. Sending an email invitation
-      // 3. Updating the UI
+      const { invitation, error } = await sendInvitation({
+        studio_id: studioId,
+        invited_email: email.trim(),
+        role,
+        message: message.trim() || null,
+      })
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      if (error) {
+        setError(error)
+        return
+      }
 
-      // Reset form
-      setEmail('')
-      setRole('artist')
-      setMessage('')
-      
-      onInviteSent?.()
-      onOpenChange(false)
+      if (invitation) {
+        // Reset form
+        setEmail('')
+        setRole('artist')
+        setMessage('')
+        
+        onInviteSent?.()
+        onOpenChange(false)
+      }
     } catch (err) {
       console.error('Error sending invitation:', err)
       setError('Errore nell\'invio dell\'invito')
