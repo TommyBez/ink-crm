@@ -26,7 +26,7 @@
   - [x] 1.4 Add foreign key constraints to auth.users and studios tables
   - [x] 1.5 Create enum for member roles (owner, artist, receptionist, admin)
   - [x] 1.6 Create enum for member status (active, pending, inactive)
-- [ ] 2.0 Update Studio Access Control and RLS Policies
+- [x] 2.0 Update Studio Access Control and RLS Policies
   - [x] 2.1 Create RLS policies for studio_members table (anon, authenticated)
   - [x] 2.2 Update studios table RLS policies to include member-based access
   - [x] 2.3 Create policies for forms table to allow member access
@@ -34,13 +34,13 @@
   - [x] 2.5 Create policies for archived_pdfs table to allow member access
   - [x] 2.6 Add helper function to check if user is studio member
 - [ ] 3.0 Create Studio Member Management Types and Functions
-  - [ ] 3.1 Create StudioMember TypeScript type with role and status
-  - [ ] 3.2 Create CreateStudioMemberInput and UpdateStudioMemberInput types
-  - [ ] 3.3 Create getStudioMembers function to fetch all members of a studio
-  - [ ] 3.4 Create addStudioMember function to add new members
-  - [ ] 3.5 Create updateStudioMember function to update member roles/status
-  - [ ] 3.6 Create removeStudioMember function to remove members
-  - [ ] 3.7 Create getUserStudio function to get user's studio (owner or member)
+  - [x] 3.1 Create StudioMember TypeScript type with role and status
+  - [x] 3.2 Create CreateStudioMemberInput and UpdateStudioMemberInput types
+  - [x] 3.3 Create getStudioMembers function to fetch all members of a studio
+  - [x] 3.4 Create addStudioMember function to add new members
+  - [x] 3.5 Create updateStudioMember function to update member roles/status
+  - [x] 3.6 Create removeStudioMember function to remove members
+  - [x] 3.7 Create getUserStudio function to get user's studio (owner or member)
 - [ ] 4.0 Update Existing Studio Functions for Multi-User Support
   - [ ] 4.1 Update getUserStudios to return user's studio (single studio)
   - [ ] 4.2 Update getStudioBySlug to check member access, not just owner
