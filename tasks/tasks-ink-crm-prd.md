@@ -7,9 +7,10 @@
 - `app/studio/loading.tsx` - Studio loading state (CREATED)
 - `components/studio/app-sidebar.tsx` - Extracted server-side sidebar component (CREATED)
 - `app/studio/page.test.tsx` - Unit tests for studio dashboard
-- `app/studio/templates/page.tsx` - Template management page
+- `app/studio/templates/page.tsx` - Template management page (CREATED)
 - `app/studio/templates/page.test.tsx` - Unit tests for template management
-- `app/studio/templates/[id]/page.tsx` - Template editor page
+- `app/studio/templates/new/page.tsx` - New template creation page (CREATED)
+- `app/studio/templates/[id]/page.tsx` - Template editor page (CREATED)
 - `app/studio/templates/[id]/page.test.tsx` - Unit tests for template editor
 - `app/studio/forms/new/page.tsx` - New form creation page
 - `app/studio/forms/new/page.test.tsx` - Unit tests for new form page
@@ -17,7 +18,12 @@
 - `app/studio/forms/[id]/page.test.tsx` - Unit tests for form filling
 - `app/studio/archive/page.tsx` - Archive search and retrieval page
 - `app/studio/archive/page.test.tsx` - Unit tests for archive page
-- `components/template-editor/template-editor.tsx` - Template editor component
+- `components/template-editor/template-editor.tsx` - Main template editor component with drag-and-drop (CREATED)
+- `components/template-editor/field-palette.tsx` - Field palette sidebar for adding new fields (CREATED)
+- `components/template-editor/field-renderer.tsx` - Individual field editor component (CREATED)
+- `components/template-editor/field-properties.tsx` - Type-specific field properties panel (CREATED)
+- `components/template-editor/template-preview.tsx` - Template preview component (CREATED)
+- `components/template-editor/preview-field.tsx` - Preview field renderer (CREATED)
 - `components/template-editor/template-editor.test.tsx` - Unit tests for template editor
 - `components/form-filler/form-filler.tsx` - Form filling component
 - `components/form-filler/form-filler.test.tsx` - Unit tests for form filler
@@ -27,6 +33,7 @@
 - `lib/pdf/pdf-generator.test.ts` - Unit tests for PDF generator
 - `lib/supabase/templates.ts` - Template database operations
 - `lib/supabase/templates.test.ts` - Unit tests for template operations
+- `app/actions/template.ts` - Template server actions for create/update/delete (UPDATED)
 - `lib/supabase/forms.ts` - Form database operations
 - `lib/supabase/forms.test.ts` - Unit tests for form operations
 - `lib/supabase/storage.ts` - PDF storage operations
@@ -75,8 +82,8 @@
   - [x] 2.8 Write migration scripts and seed data for testing
 
 - [ ] 3.0 Implement template management system
-  - [ ] 3.1 Create template list page with create/edit/delete actions
-  - [ ] 3.2 Build drag-and-drop template editor with field types (text, date, checkbox, signature)
+  - [x] 3.1 Create template list page with create/edit/delete actions
+  - [x] 3.2 Build drag-and-drop template editor with field types (text, date, checkbox, signature)
   - [ ] 3.3 Implement field properties panel (required, placeholder, validation rules)
   - [ ] 3.4 Add template preview functionality
   - [ ] 3.5 Create template save/update API endpoints
