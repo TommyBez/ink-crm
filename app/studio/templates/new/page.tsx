@@ -16,13 +16,13 @@ export default async function NewTemplatePage() {
 
   // Get user's studios
   const studios = await getUserStudios()
-
+  console.log('studios', studios)
   // For now, we'll use the first studio
   // In the future, we might want to add studio selection
   const currentStudio = studios[0]
 
   if (!currentStudio) {
-    redirect('/studio')
+      redirect('/studio')
   }
 
   return (
