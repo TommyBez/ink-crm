@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { AppSidebar } from '@/components/studio/app-sidebar'
+import { UserRoleBadge } from '@/components/studio/user-role-badge'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
@@ -37,6 +38,7 @@ export default async function StudioLayout({
                   {italianContent.studio.dashboard}
                 </h1>
                 <div className="flex items-center gap-4">
+                  <UserRoleBadge />
                   <span className="text-muted-foreground text-sm">
                     {user.email}
                   </span>
