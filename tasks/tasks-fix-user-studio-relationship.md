@@ -19,7 +19,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Create Studio Members Database Schema with One-to-Many Constraint
+- [x] 1.0 Create Studio Members Database Schema with One-to-Many Constraint
   - [x] 1.1 Create studio_members table with user_id, studio_id, role, and status fields
   - [x] 1.2 Add unique constraint on user_id to enforce one-user-one-studio rule
   - [x] 1.3 Create indexes for performance on studio_id and user_id
@@ -27,12 +27,12 @@
   - [x] 1.5 Create enum for member roles (owner, artist, receptionist, admin)
   - [x] 1.6 Create enum for member status (active, pending, inactive)
 - [ ] 2.0 Update Studio Access Control and RLS Policies
-  - [ ] 2.1 Create RLS policies for studio_members table (anon, authenticated)
-  - [ ] 2.2 Update studios table RLS policies to include member-based access
-  - [ ] 2.3 Create policies for forms table to allow member access
-  - [ ] 2.4 Create policies for templates table to allow member access
-  - [ ] 2.5 Create policies for archived_pdfs table to allow member access
-  - [ ] 2.6 Add helper function to check if user is studio member
+  - [x] 2.1 Create RLS policies for studio_members table (anon, authenticated)
+  - [x] 2.2 Update studios table RLS policies to include member-based access
+  - [x] 2.3 Create policies for forms table to allow member access
+  - [x] 2.4 Create policies for templates table to allow member access
+  - [x] 2.5 Create policies for archived_pdfs table to allow member access
+  - [x] 2.6 Add helper function to check if user is studio member
 - [ ] 3.0 Create Studio Member Management Types and Functions
   - [ ] 3.1 Create StudioMember TypeScript type with role and status
   - [ ] 3.2 Create CreateStudioMemberInput and UpdateStudioMemberInput types
