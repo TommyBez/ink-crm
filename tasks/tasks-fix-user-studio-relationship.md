@@ -69,11 +69,11 @@
   - [x] 7.5 Create InvitationForm component for sending invitations
   - [x] 7.6 Create InvitationList component for managing pending invitations
   - [x] 7.7 Add email templates for invitation notifications
-- [ ] 8.0 Update Authentication and Authorization Logic
-  - [ ] 8.1 Update middleware to check studio membership, not just ownership
-  - [ ] 8.2 Update studio layout to redirect non-members appropriately
-  - [ ] 8.3 Add role-based access control to template management
-  - [ ] 8.4 Add role-based access control to form management
-  - [ ] 8.5 Add role-based access control to PDF archival
-  - [ ] 8.6 Update user onboarding to handle studio membership
-  - [ ] 8.7 Add studio switching logic (though users can only be in one studio)
+- [x] 8.0 Update Authentication and Authorization Logic
+  - [x] 8.1 Update middleware to check studio membership, not just ownership
+  - [x] 8.2 Update studio layout to redirect non-members appropriately
+  - [x] 8.3 Add role-based access control to template management
+  - [x] 8.4 Add role-based access control to form management
+  - [x] 8.5 Add role-based access control to PDF archival
+  - [x] 8.6 Update user onboarding to handle studio membership
+  - [x] 8.7 Add studio switching logic (though users can only be in one studio)

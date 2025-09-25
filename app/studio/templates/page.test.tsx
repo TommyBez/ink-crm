@@ -18,6 +18,7 @@ vi.mock('@/lib/supabase/server', () => ({
 
 vi.mock('@/lib/supabase/studios', () => ({
   getUserStudios: vi.fn(),
+  hasStudioPermission: vi.fn(),
 }))
 
 vi.mock('@/lib/supabase/templates', () => ({
@@ -29,7 +30,7 @@ vi.mock('@/app/actions/template', () => ({
 }))
 
 const { createClient } = await import('../../../lib/supabase/server')
-const { getUserStudios } = await import('../../../lib/supabase/studios')
+const { getUserStudios, hasStudioPermission } = await import('../../../lib/supabase/studios')
 const { getTemplatesByStudioId } = await import(
   '../../../lib/supabase/templates'
 )
@@ -77,6 +78,7 @@ describe('TemplatesPage', () => {
     )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([])
+    vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
     const Component = await TemplatesPage()
     render(Component)
@@ -168,6 +170,7 @@ describe('TemplatesPage', () => {
     )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue(mockTemplates)
+    vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
     const Component = await TemplatesPage()
     render(Component)
@@ -226,6 +229,7 @@ describe('TemplatesPage', () => {
     )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([mockTemplate])
+    vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
     const Component = await TemplatesPage()
     render(Component)
@@ -265,6 +269,7 @@ describe('TemplatesPage', () => {
     )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([mockTemplate])
+    vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
     const Component = await TemplatesPage()
     render(Component)
@@ -311,6 +316,7 @@ describe('TemplatesPage', () => {
     )
     vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
     vi.mocked(getTemplatesByStudioId).mockResolvedValue(mockTemplates)
+    vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
     const Component = await TemplatesPage()
     const { container } = render(Component)

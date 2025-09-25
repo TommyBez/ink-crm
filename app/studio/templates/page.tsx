@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/card'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
-import { getUserStudios } from '@/lib/supabase/studios'
+import { getUserStudios, hasStudioPermission } from '@/lib/supabase/studios'
 import { getTemplatesByStudioId } from '@/lib/supabase/templates'
 import type { Template } from '@/types/template'
 
@@ -48,6 +48,11 @@ export default async function TemplatesPage() {
     redirect('/studio')
   }
 
+  // Check if user has permission to manage templates
+  const canCreateTemplates = await hasStudioPermission(currentStudio.id, 'create_templates')
+  const canEditTemplates = await hasStudioPermission(currentStudio.id, 'edit_templates')
+  const canDeleteTemplates = await hasStudioPermission(currentStudio.id, 'delete_templates')
+
   // Get templates for the current studio
   const templates = await getTemplatesByStudioId(currentStudio.id)
 
@@ -63,12 +68,14 @@ export default async function TemplatesPage() {
             {italianContent.templates.subtitle}
           </p>
         </div>
-        <Button asChild className="w-full sm:w-auto">
-          <Link href="/studio/templates/new">
-            <Plus className="mr-2 h-4 w-4" />
-            {italianContent.templates.createTemplate}
-          </Link>
-        </Button>
+        {canCreateTemplates && (
+          <Button asChild className="w-full sm:w-auto">
+            <Link href="/studio/templates/new">
+              <Plus className="mr-2 h-4 w-4" />
+              {italianContent.templates.createTemplate}
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Templates Grid */}
@@ -85,19 +92,26 @@ export default async function TemplatesPage() {
               <p className="mb-4 text-muted-foreground text-sm md:text-base">
                 {italianContent.templates.createFirst}
               </p>
-              <Button asChild>
-                <Link href="/studio/templates/new">
-                  <Plus className="mr-2 h-4 w-4" />
-                  {italianContent.templates.createTemplate}
-                </Link>
-              </Button>
+              {canCreateTemplates && (
+                <Button asChild>
+                  <Link href="/studio/templates/new">
+                    <Plus className="mr-2 h-4 w-4" />
+                    {italianContent.templates.createTemplate}
+                  </Link>
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {templates.map((template) => (
-            <TemplateCard key={template.id} template={template} />
+            <TemplateCard 
+              key={template.id} 
+              template={template} 
+              canEdit={canEditTemplates}
+              canDelete={canDeleteTemplates}
+            />
           ))}
         </div>
       )}
@@ -105,7 +119,15 @@ export default async function TemplatesPage() {
   )
 }
 
-function TemplateCard({ template }: { template: Template }) {
+function TemplateCard({ 
+  template, 
+  canEdit, 
+  canDelete 
+}: { 
+  template: Template
+  canEdit: boolean
+  canDelete: boolean
+}) {
   const fieldCount = template.schema.fields.length
   const lastModified = new Date(template.updated_at).toLocaleDateString(
     'it-IT',
@@ -147,24 +169,27 @@ function TemplateCard({ template }: { template: Template }) {
         </div>
 
         <div className="flex gap-2">
-          <Button asChild className="flex-1" size="sm" variant="outline">
-            <Link href={`/studio/templates/${template.id}`}>
-              <Edit2 className="mr-2 h-3 w-3" />
-              {italianContent.app.edit}
-            </Link>
-          </Button>
+          {canEdit && (
+            <Button asChild className="flex-1" size="sm" variant="outline">
+              <Link href={`/studio/templates/${template.id}`}>
+                <Edit2 className="mr-2 h-3 w-3" />
+                {italianContent.app.edit}
+              </Link>
+            </Button>
+          )}
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                className="px-3"
-                disabled={template.is_default}
-                size="sm"
-                variant="outline"
-              >
-                <Trash2 className="h-3 w-3" />
-              </Button>
-            </AlertDialogTrigger>
+          {canDelete && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  className="px-3"
+                  disabled={template.is_default}
+                  size="sm"
+                  variant="outline"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
@@ -190,6 +215,7 @@ function TemplateCard({ template }: { template: Template }) {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          )}
         </div>
       </CardContent>
     </Card>

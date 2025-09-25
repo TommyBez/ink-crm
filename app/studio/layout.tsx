@@ -5,6 +5,7 @@ import { UserRoleBadge } from '@/components/studio/user-role-badge'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
+import { getUserStudio } from '@/lib/supabase/studios'
 
 export default async function StudioLayout({
   children,
@@ -18,6 +19,12 @@ export default async function StudioLayout({
 
   if (!user) {
     redirect('/auth/login')
+  }
+
+  // Check if user has a studio (either owns one or is a member)
+  const userStudio = await getUserStudio()
+  if (!userStudio) {
+    redirect('/studio/create')
   }
 
   return (

@@ -56,6 +56,39 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Check studio membership for studio routes
+  if (user && request.nextUrl.pathname.startsWith('/studio')) {
+    const userId = user.sub
+
+    // Check if user owns a studio
+    const { data: ownedStudio } = await supabase
+      .from('studios')
+      .select('id')
+      .eq('owner_id', userId)
+      .eq('is_active', true)
+      .maybeSingle()
+
+    if (ownedStudio) {
+      // User owns a studio, allow access
+      return supabaseResponse
+    }
+
+    // Check if user is a member of a studio
+    const { data: memberRecord } = await supabase
+      .from('studio_members')
+      .select('studio_id, status')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .maybeSingle()
+
+    if (!memberRecord) {
+      // User is not a member of any studio, redirect to create studio page
+      const url = request.nextUrl.clone()
+      url.pathname = '/studio/create'
+      return NextResponse.redirect(url)
+    }
+  }
+
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:
