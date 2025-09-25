@@ -33,7 +33,7 @@
   - [x] 2.4 Create policies for templates table to allow member access
   - [x] 2.5 Create policies for archived_pdfs table to allow member access
   - [x] 2.6 Add helper function to check if user is studio member
-- [ ] 3.0 Create Studio Member Management Types and Functions
+- [x] 3.0 Create Studio Member Management Types and Functions
   - [x] 3.1 Create StudioMember TypeScript type with role and status
   - [x] 3.2 Create CreateStudioMemberInput and UpdateStudioMemberInput types
   - [x] 3.3 Create getStudioMembers function to fetch all members of a studio
@@ -42,12 +42,12 @@
   - [x] 3.6 Create removeStudioMember function to remove members
   - [x] 3.7 Create getUserStudio function to get user's studio (owner or member)
 - [ ] 4.0 Update Existing Studio Functions for Multi-User Support
-  - [ ] 4.1 Update getUserStudios to return user's studio (single studio)
-  - [ ] 4.2 Update getStudioBySlug to check member access, not just owner
-  - [ ] 4.3 Update createStudio to automatically add creator as owner member
-  - [ ] 4.4 Update updateStudio to allow member access based on role
-  - [ ] 4.5 Update deleteStudio to handle member cleanup
-  - [ ] 4.6 Add helper functions to check user permissions within studio
+  - [x] 4.1 Update getUserStudios to return user's studio (single studio)
+  - [x] 4.2 Update getStudioBySlug to check member access, not just owner
+  - [x] 4.3 Update createStudio to automatically add creator as owner member
+  - [x] 4.4 Update updateStudio to allow member access based on role
+  - [x] 4.5 Update deleteStudio to handle member cleanup
+  - [x] 4.6 Add helper functions to check user permissions within studio
 - [ ] 5.0 Create Studio Member Management UI Components
   - [ ] 5.1 Create MemberList component to display studio members
   - [ ] 5.2 Create MemberCard component for individual member display
