@@ -41,7 +41,7 @@
   - [x] 3.5 Create updateStudioMember function to update member roles/status
   - [x] 3.6 Create removeStudioMember function to remove members
   - [x] 3.7 Create getUserStudio function to get user's studio (owner or member)
-- [ ] 4.0 Update Existing Studio Functions for Multi-User Support
+- [x] 4.0 Update Existing Studio Functions for Multi-User Support
   - [x] 4.1 Update getUserStudios to return user's studio (single studio)
   - [x] 4.2 Update getStudioBySlug to check member access, not just owner
   - [x] 4.3 Update createStudio to automatically add creator as owner member
@@ -49,12 +49,12 @@
   - [x] 4.5 Update deleteStudio to handle member cleanup
   - [x] 4.6 Add helper functions to check user permissions within studio
 - [ ] 5.0 Create Studio Member Management UI Components
-  - [ ] 5.1 Create MemberList component to display studio members
-  - [ ] 5.2 Create MemberCard component for individual member display
-  - [ ] 5.3 Create InviteMemberDialog component for inviting new members
-  - [ ] 5.4 Create RoleSelector component for changing member roles
-  - [ ] 5.5 Create MemberStatusBadge component for status display
-  - [ ] 5.6 Add confirmation dialogs for member removal
+  - [x] 5.1 Create MemberList component to display studio members
+  - [x] 5.2 Create MemberCard component for individual member display
+  - [x] 5.3 Create InviteMemberDialog component for inviting new members
+  - [x] 5.4 Create RoleSelector component for changing member roles
+  - [x] 5.5 Create MemberStatusBadge component for status display
+  - [x] 5.6 Add confirmation dialogs for member removal
 - [ ] 6.0 Update Studio Navigation and Layout for Member Management
   - [ ] 6.1 Add "Members" section to studio sidebar navigation
   - [ ] 6.2 Create studio settings layout with members tab
