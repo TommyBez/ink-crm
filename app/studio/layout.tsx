@@ -23,6 +23,7 @@ export default async function StudioLayout({
 
   // Check if user has a studio (either owns one or is a member)
   const userStudio = await getUserStudio()
+  console.log('userStudio', userStudio)
   if (!userStudio) {
     redirect('/studio/create')
   }

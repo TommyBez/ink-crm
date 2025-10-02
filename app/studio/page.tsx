@@ -12,7 +12,6 @@ export default async function StudioDashboard() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
   if (!user) {
     redirect('/auth/login')
   }

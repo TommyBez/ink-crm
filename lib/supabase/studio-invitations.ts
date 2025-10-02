@@ -301,6 +301,18 @@ export async function acceptInvitation(
     return { success: false, error: 'Questo invito non è destinato al tuo indirizzo email' }
   }
 
+  // Check if user already owns a studio
+  const { data: ownedStudio } = await supabase
+    .from('studios')
+    .select('id, name')
+    .eq('owner_id', user.id)
+    .eq('is_active', true)
+    .maybeSingle()
+
+  if (ownedStudio) {
+    return { success: false, error: `Sei già proprietario dello studio "${ownedStudio.name}". Un utente può possedere solo uno studio.` }
+  }
+
   // Check if user is already a member of any studio
   const { data: existingMembership } = await supabase
     .from('studio_members')

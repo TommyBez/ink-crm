@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Building2, Users, ArrowRight, AlertCircle } from 'lucide-react'
-import { getUserStudio, getUserStudioRole } from '@/lib/supabase/studios'
+import { getUserStudio, getUserStudioRole, canUserJoinStudio } from '@/lib/supabase/studios'
 import { getInvitationsByEmail } from '@/lib/supabase/studio-invitations'
 import { createClient } from '@/lib/supabase/client'
 import type { Studio } from '@/types/studio'
@@ -18,9 +18,11 @@ export function StudioSelector() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [userStudio, setUserStudio] = useState<Studio | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const [pendingInvitations, setPendingInvitations] = useState<StudioInvitationWithDetails[]>([])
+  const [canJoin, setCanJoin] = useState<{ canJoin: boolean; reason?: string; existingStudio?: Studio } | null>(null)
 
   useEffect(() => {
     loadStudioData()
@@ -41,6 +43,8 @@ export function StudioSelector() {
         return
       }
 
+      setUser(user)
+
       // Get user's current studio
       const studio = await getUserStudio()
       setUserStudio(studio)
@@ -50,6 +54,10 @@ export function StudioSelector() {
         const role = await getUserStudioRole(studio.id)
         setUserRole(role)
       }
+
+      // Check if user can join a studio
+      const joinCheck = await canUserJoinStudio()
+      setCanJoin(joinCheck)
 
       // Get pending invitations
       const { invitations } = await getInvitationsByEmail(user.email || '')
@@ -196,14 +204,26 @@ export function StudioSelector() {
                 <span>Nessuno Studio</span>
               </CardTitle>
               <CardDescription>
-                Non sei ancora membro di nessuno studio
+                {canJoin?.canJoin === false
+                  ? `Sei già ${canJoin.existingStudio?.owner_id === user?.id ? 'proprietario' : 'membro'} dello studio "${canJoin.existingStudio?.name}"`
+                  : 'Non sei ancora membro di nessuno studio'
+                }
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={handleCreateStudio} className="w-full">
-                <Building2 className="h-4 w-4 mr-2" />
-                Crea il Tuo Studio
-              </Button>
+              {canJoin?.canJoin === false ? (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {canJoin.reason}
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Button onClick={handleCreateStudio} className="w-full">
+                  <Building2 className="h-4 w-4 mr-2" />
+                  Crea il Tuo Studio
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}

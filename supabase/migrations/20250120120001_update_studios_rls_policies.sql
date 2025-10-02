@@ -10,6 +10,7 @@
 drop policy if exists "studios_authenticated_select_policy" on public.studios;
 
 -- create updated authenticated select policy that includes studio members
+-- Note: Using a subquery approach that avoids circular dependency with studio_members policies
 create policy "studios_authenticated_select_policy"
   on public.studios
   for select
@@ -18,11 +19,13 @@ create policy "studios_authenticated_select_policy"
     -- user can access studios they own
     owner_id = auth.uid()
     or
-    -- user can access studios they are a member of
-    id in (
-      select studio_id 
-      from public.studio_members 
-      where user_id = auth.uid() and status = 'active'
+    -- user can access studios they are a member of (using EXISTS to avoid circular dependency)
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studios.id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
     )
   );
 
@@ -30,6 +33,7 @@ create policy "studios_authenticated_select_policy"
 drop policy if exists "studios_authenticated_update_policy" on public.studios;
 
 -- create updated authenticated update policy that includes studio members with appropriate roles
+-- Note: Using EXISTS to avoid circular dependency with studio_members policies
 create policy "studios_authenticated_update_policy"
   on public.studios
   for update
@@ -39,12 +43,13 @@ create policy "studios_authenticated_update_policy"
     owner_id = auth.uid()
     or
     -- user can update studios they are an admin or owner member of
-    id in (
-      select studio_id 
-      from public.studio_members 
-      where user_id = auth.uid() 
-        and status = 'active' 
-        and role in ('owner', 'admin')
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studios.id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
+        and sm.role in ('owner', 'admin')
     )
   )
   with check (
@@ -52,12 +57,13 @@ create policy "studios_authenticated_update_policy"
     owner_id = auth.uid()
     or
     -- user can update studios they are an admin or owner member of
-    id in (
-      select studio_id 
-      from public.studio_members 
-      where user_id = auth.uid() 
-        and status = 'active' 
-        and role in ('owner', 'admin')
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studios.id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
+        and sm.role in ('owner', 'admin')
     )
   );
 

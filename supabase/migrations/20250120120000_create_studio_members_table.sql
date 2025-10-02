@@ -93,70 +93,124 @@ create policy "studio_members_anon_delete_policy"
 
 -- rls policies for authenticated role
 -- authenticated users can view members of studios they belong to
+-- Note: Using EXISTS to avoid circular dependency with studios policies
 create policy "studio_members_authenticated_select_policy"
   on public.studio_members
   for select
   to authenticated
   using (
-    -- user can see members of studios they belong to (as owner or member)
-    studio_id in (
-      select id from public.studios where owner_id = auth.uid()
-      union
-      select studio_id from public.studio_members where user_id = auth.uid()
+    -- user can see members of studios they own
+    exists (
+      select 1
+      from public.studios s
+      where s.id = studio_members.studio_id
+        and s.owner_id = auth.uid()
+    )
+    or
+    -- user can see members of studios they are a member of
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studio_members.studio_id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
     )
   );
 
 -- authenticated users can create studio members (only studio owners and admins)
+-- Note: Using EXISTS to avoid circular dependency with studios policies
 create policy "studio_members_authenticated_insert_policy"
   on public.studio_members
   for insert
   to authenticated
   with check (
-    -- user must be owner or admin of the studio
-    studio_id in (
-      select id from public.studios where owner_id = auth.uid()
-      union
-      select studio_id from public.studio_members 
-      where user_id = auth.uid() and role in ('owner', 'admin')
+    -- user must be owner of the studio
+    exists (
+      select 1
+      from public.studios s
+      where s.id = studio_id
+        and s.owner_id = auth.uid()
+    )
+    or
+    -- user must be an admin member of the studio
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studio_id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
+        and sm.role in ('owner', 'admin')
     )
   );
 
 -- authenticated users can update studio members (only studio owners and admins)
+-- Note: Using EXISTS to avoid circular dependency with studios policies
 create policy "studio_members_authenticated_update_policy"
   on public.studio_members
   for update
   to authenticated
   using (
-    -- user must be owner or admin of the studio
-    studio_id in (
-      select id from public.studios where owner_id = auth.uid()
-      union
-      select studio_id from public.studio_members 
-      where user_id = auth.uid() and role in ('owner', 'admin')
+    -- user must be owner of the studio
+    exists (
+      select 1
+      from public.studios s
+      where s.id = studio_id
+        and s.owner_id = auth.uid()
+    )
+    or
+    -- user must be an admin member of the studio
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studio_id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
+        and sm.role in ('owner', 'admin')
     )
   )
   with check (
-    -- user must be owner or admin of the studio
-    studio_id in (
-      select id from public.studios where owner_id = auth.uid()
-      union
-      select studio_id from public.studio_members 
-      where user_id = auth.uid() and role in ('owner', 'admin')
+    -- user must be owner of the studio
+    exists (
+      select 1
+      from public.studios s
+      where s.id = studio_id
+        and s.owner_id = auth.uid()
+    )
+    or
+    -- user must be an admin member of the studio
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studio_id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
+        and sm.role in ('owner', 'admin')
     )
   );
 
 -- authenticated users can delete studio members (only studio owners and admins)
+-- Note: Using EXISTS to avoid circular dependency with studios policies
 create policy "studio_members_authenticated_delete_policy"
   on public.studio_members
   for delete
   to authenticated
   using (
-    -- user must be owner or admin of the studio
-    studio_id in (
-      select id from public.studios where owner_id = auth.uid()
-      union
-      select studio_id from public.studio_members 
-      where user_id = auth.uid() and role in ('owner', 'admin')
+    -- user must be owner of the studio
+    exists (
+      select 1
+      from public.studios s
+      where s.id = studio_id
+        and s.owner_id = auth.uid()
+    )
+    or
+    -- user must be an admin member of the studio
+    exists (
+      select 1
+      from public.studio_members sm
+      where sm.studio_id = studio_id
+        and sm.user_id = auth.uid()
+        and sm.status = 'active'
+        and sm.role in ('owner', 'admin')
     )
   );
 
