@@ -7,9 +7,10 @@
 - `app/studio/loading.tsx` - Studio loading state (CREATED)
 - `components/studio/app-sidebar.tsx` - Extracted server-side sidebar component (CREATED)
 - `app/studio/page.test.tsx` - Unit tests for studio dashboard
-- `app/studio/templates/page.tsx` - Template management page
+- `app/studio/templates/page.tsx` - Template management page (CREATED)
 - `app/studio/templates/page.test.tsx` - Unit tests for template management
-- `app/studio/templates/[id]/page.tsx` - Template editor page
+- `app/studio/templates/new/page.tsx` - New template creation page (CREATED)
+- `app/studio/templates/[id]/page.tsx` - Template editor page (CREATED)
 - `app/studio/templates/[id]/page.test.tsx` - Unit tests for template editor
 - `app/studio/forms/new/page.tsx` - New form creation page
 - `app/studio/forms/new/page.test.tsx` - Unit tests for new form page
@@ -17,7 +18,12 @@
 - `app/studio/forms/[id]/page.test.tsx` - Unit tests for form filling
 - `app/studio/archive/page.tsx` - Archive search and retrieval page
 - `app/studio/archive/page.test.tsx` - Unit tests for archive page
-- `components/template-editor/template-editor.tsx` - Template editor component
+- `components/template-editor/template-editor.tsx` - Main template editor component with drag-and-drop (CREATED)
+- `components/template-editor/field-palette.tsx` - Field palette sidebar for adding new fields (CREATED)
+- `components/template-editor/field-renderer.tsx` - Individual field editor component (CREATED)
+- `components/template-editor/field-properties.tsx` - Type-specific field properties panel (CREATED)
+- `components/template-editor/template-preview.tsx` - Template preview component (CREATED)
+- `components/template-editor/preview-field.tsx` - Preview field renderer (CREATED)
 - `components/template-editor/template-editor.test.tsx` - Unit tests for template editor
 - `components/form-filler/form-filler.tsx` - Form filling component
 - `components/form-filler/form-filler.test.tsx` - Unit tests for form filler
@@ -27,6 +33,7 @@
 - `lib/pdf/pdf-generator.test.ts` - Unit tests for PDF generator
 - `lib/supabase/templates.ts` - Template database operations
 - `lib/supabase/templates.test.ts` - Unit tests for template operations
+- `app/actions/template.ts` - Template server actions for create/update/delete (UPDATED)
 - `lib/supabase/forms.ts` - Form database operations
 - `lib/supabase/forms.test.ts` - Unit tests for form operations
 - `lib/supabase/storage.ts` - PDF storage operations
@@ -36,6 +43,20 @@
 - `lib/constants/italian-content.ts` - Italian text constants and messages (CREATED)
 - `app/page.tsx` - Landing page with Italian content and authentication redirect (UPDATED)
 - `components/logout-button.tsx` - Logout button component with Italian text (UPDATED)
+- `docs/supabase-setup.md` - Supabase setup guide and configuration instructions (CREATED)
+- `README.md` - Project documentation with setup instructions (UPDATED)
+- `supabase/migrations/20250819164441_create_studios_table.sql` - Migration to create studios table with RLS policies (CREATED)
+- `types/studio.ts` - TypeScript types for Studio entities (CREATED)
+- `lib/supabase/studios.ts` - Database operations for studios table (CREATED)
+ - `supabase/migrations/20250819170000_create_templates_table.sql` - Migration to create templates table with RLS policies (CREATED)
+- `types/template.ts` - TypeScript types for templates and template schema (CREATED)
+- `lib/supabase/templates.ts` - Database operations for templates table (CREATED)
+- `supabase/migrations/20250819165524_create_forms_table.sql` - Migration to create forms table with RLS policies (CREATED)
+- `types/form.ts` - TypeScript types for forms and form data (CREATED)
+- `lib/supabase/forms.ts` - Database operations for forms table (CREATED)
+- `supabase/migrations/20250819170534_create_archived_pdfs_table.sql` - Migration to create archived PDFs table with RLS policies (CREATED)
+- `types/archived-pdf.ts` - TypeScript types for archived PDFs and metadata (CREATED)
+- `lib/supabase/archived-pdfs.ts` - Database operations for archived PDFs table (CREATED)
 
 ### Notes
 
@@ -44,25 +65,25 @@
 
 ## Tasks
 
-- [ ] 1.0 Set up basic studio structure and Italian content
+- [x] 1.0 Set up basic studio structure and Italian content
   - [x] 1.1 Create Italian content constants file with all UI strings and error messages
   - [x] 1.2 Create protected `/studio` route structure with middleware authentication
   - [x] 1.3 Design and implement studio dashboard layout with sidebar navigation
   - [x] 1.4 Add responsive design for tablet and desktop views
 
-- [ ] 2.0 Create database schema and Supabase configuration
-  - [ ] 2.1 Set up Supabase project and configure environment variables
-  - [ ] 2.2 Create `studios` table with columns for studio details and settings
-  - [ ] 2.3 Create `templates` table for form templates with JSON schema for fields
-  - [ ] 2.4 Create `forms` table for filled forms with client data and timestamps
-  - [ ] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
-  - [ ] 2.6 Set up Row Level Security (RLS) policies for multi-tenant data isolation
-  - [ ] 2.7 Create database indexes for performance optimization
-  - [ ] 2.8 Write migration scripts and seed data for testing
+- [x] 2.0 Create database schema and Supabase configuration
+  - [x] 2.1 Set up Supabase project and configure environment variables
+  - [x] 2.2 Create `studios` table with columns for studio details and settings
+  - [x] 2.3 Create `templates` table for form templates with JSON schema for fields
+  - [x] 2.4 Create `forms` table for filled forms with client data and timestamps
+  - [x] 2.5 Create `archived_pdfs` table with metadata for stored PDFs
+  - [x] 2.6 Set up Row Level Security (RLS) policies for multi-tenant data isolation
+  - [x] 2.7 Create database indexes for performance optimization
+  - [x] 2.8 Write migration scripts and seed data for testing
 
 - [ ] 3.0 Implement template management system
-  - [ ] 3.1 Create template list page with create/edit/delete actions
-  - [ ] 3.2 Build drag-and-drop template editor with field types (text, date, checkbox, signature)
+  - [x] 3.1 Create template list page with create/edit/delete actions
+  - [x] 3.2 Build drag-and-drop template editor with field types (text, date, checkbox, signature)
   - [ ] 3.3 Implement field properties panel (required, placeholder, validation rules)
   - [ ] 3.4 Add template preview functionality
   - [ ] 3.5 Create template save/update API endpoints

@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
+import { MemberCountCard } from '@/components/studio/member-count-card'
 
 export default async function StudioDashboard() {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
   if (!user) {
     redirect('/auth/login')
   }
@@ -33,7 +33,7 @@ export default async function StudioDashboard() {
         <h2 className="font-semibold text-lg md:text-xl lg:text-2xl">
           {italianContent.studio.quickActions}
         </h2>
-        <div className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-5">
           <Link className="h-full" href="/studio/forms/new">
             <Card className="group h-full cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-3 md:p-6 md:pb-4">
@@ -87,6 +87,8 @@ export default async function StudioDashboard() {
               </CardContent>
             </Card>
           </Link>
+
+          <MemberCountCard />
 
           <Link className="h-full" href="/studio/settings">
             <Card className="group h-full cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg">

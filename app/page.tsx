@@ -17,7 +17,6 @@ export default async function Home() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
   // Redirect authenticated users to studio
   if (user) {
     redirect('/studio')
