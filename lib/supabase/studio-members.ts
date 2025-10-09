@@ -1,3 +1,9 @@
+/**
+ * @deprecated This file is deprecated. Use lib/supabase/user-profiles.ts instead.
+ * The studio_members table has been replaced with the user_profiles system.
+ * This file is kept for backward compatibility during migration.
+ */
+
 import type {
   CreateStudioMemberInput,
   StudioMember,

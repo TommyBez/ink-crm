@@ -97,7 +97,7 @@
   - [x] 3.9 Update StudioInvitation interface to use role: UserRole
   - [x] 3.10 Mark types/studio-member.ts as deprecated with @deprecated comment or remove file entirely
 
-- [ ] 4.0 Implement User Profile Client Library Functions
+- [x] 4.0 Implement User Profile Client Library Functions
   - [x] 4.1 Create lib/supabase/user-profiles.ts file
   - [x] 4.2 Implement getUserProfile(userId?) function to fetch user profile from user_profiles table
   - [x] 4.3 Implement createUserProfile(userId, role, studioId?) function to insert new profile
@@ -110,13 +110,13 @@
   - [x] 4.10 Add JSDoc comments to all exported functions
 
 - [ ] 5.0 Update Studio and Invitation Client Libraries
-  - [ ] 5.1 Update lib/supabase/studios.ts - replace getUserStudio() to query user_profiles.studio_id
-  - [ ] 5.2 Update hasStudioPermission() to check user_profiles.role instead of studio_members.role
-  - [ ] 5.3 Update isStudioOwner() to only check studios.owner_id (keep existing logic)
-  - [ ] 5.4 Update getUserStudioRole() to get role from user_profiles table
-  - [ ] 5.5 Remove all references to studio_members table in studios.ts
-  - [ ] 5.6 Update createStudio() to also update user_profiles.studio_id after creating studio
-  - [ ] 5.7 Remove or mark lib/supabase/studio-members.ts as deprecated
+  - [x] 5.1 Update lib/supabase/studios.ts - replace getUserStudio() to query user_profiles.studio_id
+  - [x] 5.2 Update hasStudioPermission() to check user_profiles.role instead of studio_members.role
+  - [x] 5.3 Update isStudioOwner() to only check studios.owner_id (keep existing logic)
+  - [x] 5.4 Update getUserStudioRole() to get role from user_profiles table
+  - [x] 5.5 Remove all references to studio_members table in studios.ts
+  - [x] 5.6 Update createStudio() to also update user_profiles.studio_id after creating studio
+  - [x] 5.7 Remove or mark lib/supabase/studio-members.ts as deprecated
   - [ ] 5.8 Update lib/supabase/studio-invitations.ts sendInvitation() to create user in auth.users
   - [ ] 5.9 Update sendInvitation() to create user_profiles entry with status='pending'
   - [ ] 5.10 Update sendInvitation() to create studio_invitations entry with new role enum
