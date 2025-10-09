@@ -54,7 +54,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Create Database Schema for User Profiles System
+- [x] 1.0 Create Database Schema for User Profiles System
   - [x] 1.1 Create `user_role` enum with values ('studio_admin', 'studio_member')
   - [x] 1.2 Create `user_status` enum with values ('active', 'pending', 'inactive')
   - [x] 1.3 Create `user_profiles` table with columns: user_id (PK), role, studio_id (nullable FK), status, invited_by, invited_at, accepted_at, created_at, updated_at
@@ -67,23 +67,23 @@
   - [x] 1.10 Update studio_invitations table to change role column from studio_member_role to user_role enum
 
 - [ ] 2.0 Implement Database Helper Functions and RLS Policies
-  - [ ] 2.1 Create function `get_user_role(user_uuid)` that returns the user's role from user_profiles
-  - [ ] 2.2 Create function `is_studio_admin(user_uuid)` that checks if user has studio_admin role
-  - [ ] 2.3 Create function `get_user_studio(user_uuid)` that returns the user's studio_id from user_profiles
-  - [ ] 2.4 Create function `can_access_studio(studio_uuid, user_uuid)` that checks if user is owner or has studio_id matching
-  - [ ] 2.5 Create function `can_create_studio(user_uuid)` that checks if user is studio_admin with null studio_id
-  - [ ] 2.6 Add RLS policy on user_profiles for SELECT: users can read their own profile
-  - [ ] 2.7 Add RLS policy on user_profiles for INSERT: only service role can insert
-  - [ ] 2.8 Add RLS policy on user_profiles for UPDATE: users can update their own profile, studio_admins can update profiles in their studio
-  - [ ] 2.9 Update studios SELECT policy to use can_access_studio() function
-  - [ ] 2.10 Update studios INSERT policy to use can_create_studio() function
-  - [ ] 2.11 Update studios UPDATE/DELETE policies to check owner_id = auth.uid()
-  - [ ] 2.12 Update forms RLS policies to use can_access_studio() function
-  - [ ] 2.13 Update templates RLS policies to use can_access_studio() function
-  - [ ] 2.14 Update archived_pdfs RLS policies to use can_access_studio() function
-  - [ ] 2.15 Drop old helper functions: is_studio_member, has_studio_role, has_any_studio_role, get_user_studio_role
-  - [ ] 2.16 Drop studio_members table
-  - [ ] 2.17 Drop studio_member_role and studio_member_status enums
+  - [x] 2.1 Create function `get_user_role(user_uuid)` that returns the user's role from user_profiles
+  - [x] 2.2 Create function `is_studio_admin(user_uuid)` that checks if user has studio_admin role
+  - [x] 2.3 Create function `get_user_studio(user_uuid)` that returns the user's studio_id from user_profiles
+  - [x] 2.4 Create function `can_access_studio(studio_uuid, user_uuid)` that checks if user is owner or has studio_id matching
+  - [x] 2.5 Create function `can_create_studio(user_uuid)` that checks if user is studio_admin with null studio_id
+  - [x] 2.6 Add RLS policy on user_profiles for SELECT: users can read their own profile
+  - [x] 2.7 Add RLS policy on user_profiles for INSERT: only service role can insert
+  - [x] 2.8 Add RLS policy on user_profiles for UPDATE: users can update their own profile, studio_admins can update profiles in their studio
+  - [x] 2.9 Update studios SELECT policy to use can_access_studio() function
+  - [x] 2.10 Update studios INSERT policy to use can_create_studio() function
+  - [x] 2.11 Update studios UPDATE/DELETE policies to check owner_id = auth.uid()
+  - [x] 2.12 Update forms RLS policies to use can_access_studio() function
+  - [x] 2.13 Update templates RLS policies to use can_access_studio() function
+  - [x] 2.14 Update archived_pdfs RLS policies to use can_access_studio() function
+  - [x] 2.15 Drop old helper functions: is_studio_member, has_studio_role, has_any_studio_role, get_user_studio_role
+  - [x] 2.16 Drop studio_members table
+  - [x] 2.17 Drop studio_member_role and studio_member_status enums
 
 - [ ] 3.0 Create TypeScript Types for User Profiles
   - [ ] 3.1 Create types/user-profile.ts with UserRole type ('studio_admin' | 'studio_member')
