@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/card'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
-import { getUserStudios, hasStudioPermission } from '@/lib/supabase/studios'
+import { getUserStudio, hasStudioPermission } from '@/lib/supabase/studios'
 import { getTemplatesByStudioId } from '@/lib/supabase/templates'
 import type { Template } from '@/types/template'
 
@@ -37,12 +37,8 @@ export default async function TemplatesPage() {
     redirect('/auth/login')
   }
 
-  // Get user's studios
-  const studios = await getUserStudios()
-
-  // For now, we'll use the first studio
-  // In the future, we might want to add studio selection
-  const currentStudio = studios[0]
+  // Get user's studio
+  const currentStudio = await getUserStudio()
 
   if (!currentStudio) {
     redirect('/studio')

@@ -1,6 +1,6 @@
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getUserStudios } from '@/lib/supabase/studios'
+import { getUserStudio } from '@/lib/supabase/studios'
 import { getTemplateById } from '@/lib/supabase/templates'
 import { TemplateEditor } from '@/components/template-editor/template-editor'
 import italianContent from '@/lib/constants/italian-content'
@@ -21,12 +21,8 @@ export default async function EditTemplatePage({ params }: EditTemplatePageProps
     redirect('/auth/login')
   }
 
-  // Get user's studios
-  const studios = await getUserStudios()
-
-  // For now, we'll use the first studio
-  // In the future, we might want to add studio selection
-  const currentStudio = studios[0]
+  // Get user's studio
+  const currentStudio = await getUserStudio()
 
   if (!currentStudio) {
     redirect('/studio')

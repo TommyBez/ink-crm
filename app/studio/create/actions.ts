@@ -3,6 +3,7 @@
 import { createStudio } from '@/lib/supabase/studios'
 import { generateSlug } from '@/lib/supabase/studios'
 import { createClient } from '@/lib/supabase/server'
+import { isStudioAdmin, canUserCreateStudio } from '@/lib/supabase/user-profiles'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -47,6 +48,24 @@ export async function createStudioAction(_: any, formData: FormData) {
   }
   
   console.log('Authenticated user:', user.id)
+  
+  // Check if user is a studio admin
+  const isAdmin = await isStudioAdmin(user.id)
+  if (!isAdmin) {
+    return { 
+      error: 'Solo gli amministratori studio possono creare uno studio.',
+      formData: {}
+    }
+  }
+  
+  // Check if user can create a studio (no existing studio)
+  const canCreate = await canUserCreateStudio(user.id)
+  if (!canCreate) {
+    return { 
+      error: 'Hai già uno studio. Un utente può creare solo uno studio.',
+      formData: {}
+    }
+  }
   
   // Extract form data
   const rawData = {

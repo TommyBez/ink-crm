@@ -17,7 +17,7 @@ vi.mock('@/lib/supabase/server', () => ({
 }))
 
 vi.mock('@/lib/supabase/studios', () => ({
-  getUserStudios: vi.fn(),
+  getUserStudio: vi.fn(),
   hasStudioPermission: vi.fn(),
 }))
 
@@ -30,7 +30,7 @@ vi.mock('@/app/actions/template', () => ({
 }))
 
 const { createClient } = await import('../../../lib/supabase/server')
-const { getUserStudios, hasStudioPermission } = await import('../../../lib/supabase/studios')
+const { getUserStudio, hasStudioPermission } = await import('../../../lib/supabase/studios')
 const { getTemplatesByStudioId } = await import(
   '../../../lib/supabase/templates'
 )
@@ -76,7 +76,7 @@ describe('TemplatesPage', () => {
     vi.mocked(createClient).mockResolvedValue(
       mockSupabase as unknown as SupabaseClient,
     )
-    vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
+    vi.mocked(getUserStudio).mockResolvedValue(mockStudio)
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([])
     vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
@@ -168,7 +168,7 @@ describe('TemplatesPage', () => {
     vi.mocked(createClient).mockResolvedValue(
       mockSupabase as unknown as SupabaseClient,
     )
-    vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
+    vi.mocked(getUserStudio).mockResolvedValue(mockStudio)
     vi.mocked(getTemplatesByStudioId).mockResolvedValue(mockTemplates)
     vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
@@ -227,7 +227,7 @@ describe('TemplatesPage', () => {
     vi.mocked(createClient).mockResolvedValue(
       mockSupabase as unknown as SupabaseClient,
     )
-    vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
+    vi.mocked(getUserStudio).mockResolvedValue(mockStudio)
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([mockTemplate])
     vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
@@ -267,7 +267,7 @@ describe('TemplatesPage', () => {
     vi.mocked(createClient).mockResolvedValue(
       mockSupabase as unknown as SupabaseClient,
     )
-    vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
+    vi.mocked(getUserStudio).mockResolvedValue(mockStudio)
     vi.mocked(getTemplatesByStudioId).mockResolvedValue([mockTemplate])
     vi.mocked(hasStudioPermission).mockResolvedValue(true)
 
@@ -314,7 +314,7 @@ describe('TemplatesPage', () => {
     vi.mocked(createClient).mockResolvedValue(
       mockSupabase as unknown as SupabaseClient,
     )
-    vi.mocked(getUserStudios).mockResolvedValue([mockStudio])
+    vi.mocked(getUserStudio).mockResolvedValue(mockStudio)
     vi.mocked(getTemplatesByStudioId).mockResolvedValue(mockTemplates)
     vi.mocked(hasStudioPermission).mockResolvedValue(true)
 

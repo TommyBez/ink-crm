@@ -1,9 +1,11 @@
 import { Menu } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import { AppSidebar } from '@/components/studio/app-sidebar'
 import { UserRoleBadge } from '@/components/studio/user-role-badge'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
+import { getUserProfile } from '@/lib/supabase/user-profiles'
 
 
 export default async function StudioLayout({
@@ -18,7 +20,22 @@ export default async function StudioLayout({
 
   // Redirect to login if user is not authenticated
   if (!user) {
-    return <div>Please log in to access the studio.</div>
+    redirect('/auth/login')
+  }
+
+  // Get user profile to check role and studio assignment
+  const profile = await getUserProfile(user.id)
+  
+  if (profile) {
+    // If user is studio_admin without a studio, redirect to create studio
+    if (profile.role === 'studio_admin' && !profile.studio_id) {
+      redirect('/studio/create')
+    }
+    
+    // If user is studio_member without a studio, redirect to waiting page
+    if (profile.role === 'studio_member' && !profile.studio_id) {
+      redirect('/waiting')
+    }
   }
 
   return (

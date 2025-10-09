@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getUserStudios, hasStudioPermission } from '@/lib/supabase/studios'
+import { getUserStudio, hasStudioPermission } from '@/lib/supabase/studios'
 
 export default async function FormsPage() {
   const supabase = await createClient()
@@ -12,9 +12,8 @@ export default async function FormsPage() {
     redirect('/auth/login')
   }
 
-  // Get user's studios
-  const studios = await getUserStudios()
-  const currentStudio = studios[0]
+  // Get user's studio
+  const currentStudio = await getUserStudio()
 
   if (!currentStudio) {
     redirect('/studio')

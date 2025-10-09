@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { hasStudioPermission } from '@/lib/supabase/studios'
+import { hasStudioPermission, getUserStudio } from '@/lib/supabase/studios'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function SettingsLayout({
@@ -13,37 +13,8 @@ export default async function SettingsLayout({
   } = await supabase.auth.getUser()
 
   // Get user's studio for permission checking
-  let studioId: string | null = null
-  if (user) {
-    // Check if user owns a studio
-    const { data: ownedStudioMember } = await supabase
-      .from('studio_members')
-      .select(`
-        studio:studios!studio_id (
-          id
-        )
-      `)
-      .eq('user_id', user.id)
-      .eq('role', 'owner')
-      .eq('status', 'active')
-      .maybeSingle()
-
-    if (ownedStudioMember?.studio) {
-      studioId = ownedStudioMember.studio.id
-    } else {
-      // Check if user is a member
-      const { data: memberRecord } = await supabase
-        .from('studio_members')
-        .select('studio_id')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .maybeSingle()
-
-      if (memberRecord) {
-        studioId = memberRecord.studio_id
-      }
-    }
-  }
+  const userStudio = await getUserStudio()
+  const studioId = userStudio?.id || null
 
   // Check permissions for different tabs
   const canManageMembers = studioId ? await hasStudioPermission(studioId, 'manage_members') : false

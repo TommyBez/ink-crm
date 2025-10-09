@@ -149,20 +149,20 @@
   - [x] 7.9 Create app/waiting/page.tsx for studio_members awaiting invitation acceptance
   - [x] 7.10 Add helpful message in waiting page explaining invitation status
 
-- [ ] 8.0 Update Studio Pages and Routes
-  - [ ] 8.1 Update app/studio/layout.tsx to check user profile and studio assignment
-  - [ ] 8.2 Add redirect in studio layout if studio_admin without studio → /studio/create
-  - [ ] 8.3 Add message in studio layout if studio_member without studio → "Waiting for invitation"
-  - [ ] 8.4 Update app/studio/create/actions.ts to verify user is studio_admin using isStudioAdmin()
-  - [ ] 8.5 Update createStudioAction to verify user has no existing studio using canCreateStudio()
-  - [ ] 8.6 Update createStudioAction to update user_profiles.studio_id after creating studio
-  - [ ] 8.7 Update app/studio/page.tsx to use new getUserStudio() function
-  - [ ] 8.8 Update app/studio/forms/page.tsx to use new permission checking functions
-  - [ ] 8.9 Update app/studio/templates/[id]/page.tsx to use new permission system
-  - [ ] 8.10 Update app/studio/templates/page.tsx to use new permission system
-  - [ ] 8.11 Update app/studio/archive/page.tsx to use new permission system
-  - [ ] 8.12 Update app/studio/settings/layout.tsx to use new permission system
-  - [ ] 8.13 Remove all references to studio_members from studio pages
+- [x] 8.0 Update Studio Pages and Routes
+  - [x] 8.1 Update app/studio/layout.tsx to check user profile and studio assignment
+  - [x] 8.2 Add redirect in studio layout if studio_admin without studio → /studio/create
+  - [x] 8.3 Add message in studio layout if studio_member without studio → "Waiting for invitation"
+  - [x] 8.4 Update app/studio/create/actions.ts to verify user is studio_admin using isStudioAdmin()
+  - [x] 8.5 Update createStudioAction to verify user has no existing studio using canCreateStudio()
+  - [x] 8.6 Update createStudioAction to update user_profiles.studio_id after creating studio
+  - [x] 8.7 Update app/studio/page.tsx to use new getUserStudio() function
+  - [x] 8.8 Update app/studio/forms/page.tsx to use new permission checking functions
+  - [x] 8.9 Update app/studio/templates/[id]/page.tsx to use new permission system
+  - [x] 8.10 Update app/studio/templates/page.tsx to use new permission system
+  - [x] 8.11 Update app/studio/archive/page.tsx to use new permission system
+  - [x] 8.12 Update app/studio/settings/layout.tsx to use new permission system
+  - [x] 8.13 Remove all references to studio_members from studio pages
 
 - [ ] 9.0 Update Invitation System and Scripts
   - [ ] 9.1 Update scripts/send-invitation.ts to accept role parameter (studio_admin or studio_member)
