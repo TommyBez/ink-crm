@@ -22,15 +22,16 @@ export function UserRoleBadge() {
           return
         }
 
-        // Get user's studio
-        const { data: ownedStudio } = await supabase
-          .from('studios')
-          .select('id')
-          .eq('owner_id', user.id)
-          .eq('is_active', true)
+        // Check if user is an owner of any studio
+        const { data: ownedStudioMember } = await supabase
+          .from('studio_members')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'owner')
+          .eq('status', 'active')
           .maybeSingle()
 
-        if (ownedStudio) {
+        if (ownedStudioMember) {
           setUserRole('owner')
         } else {
           // Check if user is a member

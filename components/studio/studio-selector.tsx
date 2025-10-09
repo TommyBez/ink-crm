@@ -205,7 +205,7 @@ export function StudioSelector() {
               </CardTitle>
               <CardDescription>
                 {canJoin?.canJoin === false
-                  ? `Sei già ${canJoin.existingStudio?.owner_id === user?.id ? 'proprietario' : 'membro'} dello studio "${canJoin.existingStudio?.name}"`
+                  ? `Sei già ${canJoin.reason?.includes('proprietario') ? 'proprietario' : 'membro'} dello studio "${canJoin.existingStudio?.name}"`
                   : 'Non sei ancora membro di nessuno studio'
                 }
               </CardDescription>

@@ -25,10 +25,13 @@ export async function getStudioInvitations(
   }
 
   // Check if the current user has permission to view invitations
-  const { data: studioOwner, error: ownerError } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', studioId)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role, status')
+    .eq('studio_id', studioId)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
   const { data: member, error: memberError } = await supabase
@@ -38,12 +41,12 @@ export async function getStudioInvitations(
     .eq('user_id', user.id)
     .maybeSingle()
 
-  if (ownerError || memberError) {
-    console.error('Error checking user permissions:', ownerError || memberError)
+  if (memberError) {
+    console.error('Error checking user permissions:', memberError)
     return { invitations: null, error: 'Errore durante il controllo dei permessi' }
   }
 
-  const isOwner = studioOwner?.owner_id === user.id
+  const isOwner = !!ownerRecord
   const isAdmin = member?.role === 'admin' && member?.status === 'active'
 
   if (!isOwner && !isAdmin) {
@@ -175,18 +178,16 @@ export async function sendInvitation(
   }
 
   // Check if the current user has permission to send invitations
-  const { data: studioOwner, error: ownerError } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', input.studio_id)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role, status')
+    .eq('studio_id', input.studio_id)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (ownerError) {
-    console.error('Error checking studio owner:', ownerError)
-    return { invitation: null, error: 'Errore durante il controllo del proprietario dello studio' }
-  }
-
-  const isOwner = studioOwner?.owner_id === user.id
+  const isOwner = !!ownerRecord
 
   let isAdmin = false
   if (!isOwner) {
@@ -303,14 +304,19 @@ export async function acceptInvitation(
 
   // Check if user already owns a studio
   const { data: ownedStudio } = await supabase
-    .from('studios')
-    .select('id, name')
-    .eq('owner_id', user.id)
-    .eq('is_active', true)
+    .from('studio_members')
+    .select(`
+      studio:studios!studio_id (
+        id, name
+      )
+    `)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (ownedStudio) {
-    return { success: false, error: `Sei già proprietario dello studio "${ownedStudio.name}". Un utente può possedere solo uno studio.` }
+  if (ownedStudio?.studio) {
+    return { success: false, error: `Sei già proprietario dello studio "${ownedStudio.studio.name}". Un utente può possedere solo uno studio.` }
   }
 
   // Check if user is already a member of any studio
@@ -449,18 +455,16 @@ export async function cancelInvitation(
   }
 
   // Check if user has permission to cancel this invitation
-  const { data: studioOwner, error: ownerError } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', invitation.studio_id)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role, status')
+    .eq('studio_id', invitation.studio_id)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (ownerError) {
-    console.error('Error checking studio owner:', ownerError)
-    return { success: false, error: 'Errore durante il controllo del proprietario dello studio' }
-  }
-
-  const isOwner = studioOwner?.owner_id === user.id
+  const isOwner = !!ownerRecord
   const isInviter = invitation.invited_by === user.id
 
   let isAdmin = false
@@ -522,18 +526,16 @@ export async function resendInvitation(
   }
 
   // Check if user has permission to resend this invitation
-  const { data: studioOwner, error: ownerError } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', invitation.studio_id)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role, status')
+    .eq('studio_id', invitation.studio_id)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (ownerError) {
-    console.error('Error checking studio owner:', ownerError)
-    return { invitation: null, error: 'Errore durante il controllo del proprietario dello studio' }
-  }
-
-  const isOwner = studioOwner?.owner_id === user.id
+  const isOwner = !!ownerRecord
   const isInviter = invitation.invited_by === user.id
 
   let isAdmin = false

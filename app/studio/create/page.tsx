@@ -1,82 +1,20 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, Building2, Users } from 'lucide-react'
-import { createStudio } from '@/lib/supabase/studios'
-import { generateSlug } from '@/lib/supabase/studios'
+import { Building2, Users } from 'lucide-react'
+import { createStudioAction } from './actions'
+import { useActionState } from 'react'
+import { CreateStudioInput } from '../../../types/studio'
 
 export default function CreateStudioPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    address_street: '',
-    address_city: '',
-    address_postal_code: '',
-    address_country: 'IT',
-    phone: '',
-    email: '',
-    website: '',
-  })
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!formData.name.trim()) {
-      setError('Il nome dello studio è obbligatorio')
-      return
-    }
-
-    try {
-      setLoading(true)
-      setError(null)
-
-      const slug = generateSlug(formData.name)
-      
-      const { studio, error } = await createStudio({
-        name: formData.name.trim(),
-        description: formData.description.trim() || null,
-        slug,
-        address_street: formData.address_street.trim() || null,
-        address_city: formData.address_city.trim() || null,
-        address_postal_code: formData.address_postal_code.trim() || null,
-        address_country: formData.address_country,
-        phone: formData.phone.trim() || null,
-        email: formData.email.trim() || null,
-        website: formData.website.trim() || null,
-        settings: {},
-      })
-
-      if (error) {
-        setError(error)
-        return
-      }
-
-      if (studio) {
-        // Redirect to the studio dashboard
-        router.push('/studio')
-      }
-    } catch (err) {
-      console.error('Error creating studio:', err)
-      setError('Errore durante la creazione dello studio')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
-
+  const [ state, formAction, isPending ] = useActionState(createStudioAction, { success: false, error: undefined, formData: undefined })
+  const data = formData as CreateStudioInput
+  // Get form data from state if available (for error cases)
+  const formData = state?.formData || {}
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -103,22 +41,21 @@ export default function CreateStudioPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <Alert>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+            {state?.error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-sm text-red-600">{state.error}</p>
+              </div>
+            )}
+            <form action={formAction} className="space-y-4">
 
               <div className="space-y-2">
                 <Label htmlFor="name">Nome Studio *</Label>
                 <Input
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="Il Nome del Tuo Studio"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  disabled={loading}
+                  defaultValue={formData.name as string || ''}
                   required
                 />
               </div>
@@ -127,10 +64,9 @@ export default function CreateStudioPage() {
                 <Label htmlFor="description">Descrizione</Label>
                 <Textarea
                   id="description"
+                  name="description"
                   placeholder="Descrivi il tuo studio..."
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  disabled={loading}
+                  defaultValue={formData.description || ''}
                   rows={3}
                 />
               </div>
@@ -139,35 +75,43 @@ export default function CreateStudioPage() {
                 <Label htmlFor="address_street">Indirizzo</Label>
                 <Input
                   id="address_street"
+                  name="address_street"
                   type="text"
                   placeholder="Via, Piazza, ecc."
-                  value={formData.address_street}
-                  onChange={(e) => handleInputChange('address_street', e.target.value)}
-                  disabled={loading}
+                  defaultValue={formData.address_street || ''}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="address_city">Città</Label>
                   <Input
                     id="address_city"
+                    name="address_city"
                     type="text"
                     placeholder="Città"
-                    value={formData.address_city}
-                    onChange={(e) => handleInputChange('address_city', e.target.value)}
-                    disabled={loading}
+                    defaultValue={formData.address_city || ''}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="address_province">Provincia</Label>
+                  <Input
+                    id="address_province"
+                    name="address_province"
+                    type="text"
+                    placeholder="MI"
+                    maxLength={2}
+                    defaultValue={formData.address_province || ''}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="address_postal_code">CAP</Label>
                   <Input
                     id="address_postal_code"
+                    name="address_postal_code"
                     type="text"
                     placeholder="12345"
-                    value={formData.address_postal_code}
-                    onChange={(e) => handleInputChange('address_postal_code', e.target.value)}
-                    disabled={loading}
+                    defaultValue={formData.address_postal_code || ''}
                   />
                 </div>
               </div>
@@ -176,11 +120,10 @@ export default function CreateStudioPage() {
                 <Label htmlFor="phone">Telefono</Label>
                 <Input
                   id="phone"
+                  name="phone"
                   type="tel"
                   placeholder="+39 123 456 7890"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  disabled={loading}
+                  defaultValue={formData.phone || ''}
                 />
               </div>
 
@@ -188,11 +131,10 @@ export default function CreateStudioPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="studio@esempio.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  disabled={loading}
+                  defaultValue={formData.email || ''}
                 />
               </div>
 
@@ -200,17 +142,55 @@ export default function CreateStudioPage() {
                 <Label htmlFor="website">Sito Web</Label>
                 <Input
                   id="website"
+                  name="website"
                   type="url"
                   placeholder="https://www.esempio.com"
-                  value={formData.website}
-                  onChange={(e) => handleInputChange('website', e.target.value)}
-                  disabled={loading}
+                  defaultValue={formData.website || ''}
                 />
               </div>
 
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Crea Studio
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="text-lg font-medium text-gray-900">Informazioni Aziendali</h3>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="business_name">Ragione Sociale</Label>
+                  <Input
+                    id="business_name"
+                    name="business_name"
+                    type="text"
+                    placeholder="Nome dell'azienda"
+                    defaultValue={formData.business_name || ''}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="partita_iva">Partita IVA</Label>
+                    <Input
+                      id="partita_iva"
+                      name="partita_iva"
+                      type="text"
+                      placeholder="12345678901"
+                      defaultValue={formData.partita_iva || ''}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="codice_fiscale">Codice Fiscale</Label>
+                    <Input
+                      id="codice_fiscale"
+                      name="codice_fiscale"
+                      type="text"
+                      placeholder="RSSMRA80A01H501U"
+                      defaultValue={formData.codice_fiscale || ''}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <input type="hidden" name="address_country" value="IT" />
+
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? 'Creazione in corso...' : 'Crea Studio'}
               </Button>
             </form>
           </CardContent>

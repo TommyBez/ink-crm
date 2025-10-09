@@ -56,12 +56,7 @@ export async function getStudioBySlug(slug: string): Promise<Studio | null> {
     return null
   }
 
-  // Check if user is the owner
-  if (studio.owner_id === user.id) {
-    return studio
-  }
-
-  // Check if user is a member of the studio
+  // Check if user is a member of the studio (includes owners)
   const { data: memberRecord, error: memberError } = await supabase
     .from('studio_members')
     .select('id')
@@ -75,7 +70,7 @@ export async function getStudioBySlug(slug: string): Promise<Studio | null> {
     return null
   }
 
-  // Return studio only if user is a member
+  // Return studio only if user is a member (includes owners)
   return memberRecord ? studio : null
 }
 
@@ -89,19 +84,23 @@ export async function getUserStudio(): Promise<Studio | null> {
   // Get current user (using getClaims for consistency with middleware)
   const { data } = await supabase.auth.getClaims()
   const user = data?.claims
-  console.log('user', user)
   if (!user) {
     return null
   }
 
   const userId = user?.sub || user?.id
 
-  // First check if user owns a studio
+  // Check if user is an owner member of any studio
   const { data: ownedStudio, error: ownerError } = await supabase
-    .from('studios')
-    .select('*')
-    .eq('owner_id', userId)
-    .eq('is_active', true)
+    .from('studio_members')
+    .select(`
+      studio:studios!studio_id (
+        *
+      )
+    `)
+    .eq('user_id', userId)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
   if (ownerError) {
@@ -109,8 +108,8 @@ export async function getUserStudio(): Promise<Studio | null> {
     return null
   }
 
-  if (ownedStudio) {
-    return ownedStudio
+  if (ownedStudio?.studio) {
+    return ownedStudio.studio
   }
 
   // If not owner, check if user is a member of a studio
@@ -161,14 +160,19 @@ export async function createStudio(
 
   // Check if user already owns a studio
   const { data: existingOwnedStudio } = await supabase
-    .from('studios')
-    .select('id, name')
-    .eq('owner_id', user.id)
-    .eq('is_active', true)
+    .from('studio_members')
+    .select(`
+      studio:studios!studio_id (
+        id, name
+      )
+    `)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (existingOwnedStudio) {
-    return { studio: null, error: `Sei già proprietario dello studio "${existingOwnedStudio.name}". Un utente può possedere solo uno studio.` }
+  if (existingOwnedStudio?.studio) {
+    return { studio: null, error: `Sei già proprietario dello studio "${existingOwnedStudio.studio.name}". Un utente può possedere solo uno studio.` }
   }
 
   // Check if slug is already taken
@@ -187,7 +191,6 @@ export async function createStudio(
     .from('studios')
     .insert({
       ...input,
-      owner_id: user.id,
       settings: input.settings || {},
       address_country: input.address_country || 'IT',
     })
@@ -195,28 +198,11 @@ export async function createStudio(
     .single()
 
   if (error) {
+    console.error('Error creating studio:', error)
     return { studio: null, error: 'Errore durante la creazione dello studio' }
   }
 
-  // Automatically add the creator as an owner member in the studio_members table
-  const { error: memberError } = await supabase
-    .from('studio_members')
-    .insert({
-      user_id: user.id,
-      studio_id: data.id,
-      role: 'owner',
-      status: 'active',
-      invited_by: null,
-      invited_at: null,
-      accepted_at: new Date(),
-      notes: 'Studio owner',
-    })
-
-  if (memberError) {
-    console.error('Error creating owner member record:', memberError)
-    // Don't fail the studio creation if member record creation fails
-    // The studio owner can still access via the owner_id field
-  }
+  // The trigger will automatically add the creator as an owner member
 
   return { studio: data, error: null }
 }
@@ -240,23 +226,22 @@ export async function updateStudio(
   }
 
   // Check if user has permission to update the studio
-  const { data: studio } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', id)
+  // Check if user is an owner member
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role')
+    .eq('studio_id', id)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (!studio) {
-    return { studio: null, error: 'Studio non trovato' }
-  }
-
-  // Check if user is the owner
-  const isOwner = studio.owner_id === user.id
+  const isOwner = !!ownerRecord
 
   // If not owner, check if user is an admin member
   let isAdminMember = false
   if (!isOwner) {
-    const { data: memberRecord } = await supabase
+    const { data: adminRecord } = await supabase
       .from('studio_members')
       .select('role')
       .eq('studio_id', id)
@@ -265,7 +250,7 @@ export async function updateStudio(
       .eq('role', 'admin')
       .maybeSingle()
 
-    isAdminMember = !!memberRecord
+    isAdminMember = !!adminRecord
   }
 
   if (!isOwner && !isAdminMember) {
@@ -322,17 +307,16 @@ export async function deleteStudio(
   }
 
   // Check if user is the owner of the studio
-  const { data: studio } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', id)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role')
+    .eq('studio_id', id)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (!studio) {
-    return { success: false, error: 'Studio non trovato' }
-  }
-
-  if (studio.owner_id !== user.id) {
+  if (!ownerRecord) {
     return { success: false, error: 'Solo il proprietario può eliminare lo studio' }
   }
 
@@ -384,13 +368,16 @@ export async function hasStudioPermission(
   }
 
   // Check if user is the owner
-  const { data: studio } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', studioId)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('role')
+    .eq('studio_id', studioId)
+    .eq('user_id', targetUserId)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (studio?.owner_id === targetUserId) {
+  if (ownerRecord) {
     return true // Owners have all permissions
   }
 
@@ -436,13 +423,16 @@ export async function isStudioOwner(
     targetUserId = user.id
   }
 
-  const { data: studio } = await supabase
-    .from('studios')
-    .select('owner_id')
-    .eq('id', studioId)
+  const { data: ownerRecord } = await supabase
+    .from('studio_members')
+    .select('id')
+    .eq('studio_id', studioId)
+    .eq('user_id', targetUserId)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  return studio?.owner_id === targetUserId
+  return !!ownerRecord
 }
 
 /**
@@ -535,14 +525,19 @@ export async function canUserJoinStudio(userId?: string): Promise<{ canJoin: boo
 
   // Check if user already owns a studio
   const { data: ownedStudio } = await supabase
-    .from('studios')
-    .select('id, name')
-    .eq('owner_id', targetUserId)
-    .eq('is_active', true)
+    .from('studio_members')
+    .select(`
+      studio:studios!studio_id (
+        id, name
+      )
+    `)
+    .eq('user_id', targetUserId)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (ownedStudio) {
-    return { canJoin: false, reason: `Sei già proprietario dello studio "${ownedStudio.name}"`, existingStudio: ownedStudio }
+  if (ownedStudio?.studio) {
+    return { canJoin: false, reason: `Sei già proprietario dello studio "${ownedStudio.studio.name}"`, existingStudio: ownedStudio.studio }
   }
 
   // Check if user is already a member of a studio

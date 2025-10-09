@@ -112,9 +112,11 @@ export async function addStudioMember(
 
   // Check if user is already the owner of any studio
   const { data: existingOwner } = await supabase
-    .from('studios')
+    .from('studio_members')
     .select('id')
-    .eq('owner_id', input.user_id)
+    .eq('user_id', input.user_id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
   if (existingOwner) {
@@ -221,18 +223,24 @@ export async function getUserStudio(): Promise<StudioMember | null> {
   }
 
   // First check if user owns a studio
-  const { data: ownedStudio } = await supabase
-    .from('studios')
-    .select('id, owner_id')
-    .eq('owner_id', user.id)
+  const { data: ownedStudioMember } = await supabase
+    .from('studio_members')
+    .select(`
+      studio:studios!studio_id (
+        id
+      )
+    `)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
-  if (ownedStudio) {
+  if (ownedStudioMember?.studio) {
     // Return a virtual studio member record for the owner
     return {
-      id: `owner-${ownedStudio.id}`,
+      id: `owner-${ownedStudioMember.studio.id}`,
       user_id: user.id,
-      studio_id: ownedStudio.id,
+      studio_id: ownedStudioMember.studio.id,
       role: 'owner',
       status: 'active',
       invited_by: null,
@@ -266,10 +274,12 @@ export async function isUserStudioMember(
 
   // Check if user is the owner
   const { data: ownedStudio } = await supabase
-    .from('studios')
+    .from('studio_members')
     .select('id')
-    .eq('id', studioId)
-    .eq('owner_id', userId)
+    .eq('studio_id', studioId)
+    .eq('user_id', userId)
+    .eq('role', 'owner')
+    .eq('status', 'active')
     .maybeSingle()
 
   if (ownedStudio) {
@@ -305,12 +315,18 @@ export async function getUserStudios(): Promise<Array<{ studio_id: string; role:
 
   // Get owned studios
   const { data: ownedStudios } = await supabase
-    .from('studios')
-    .select('id')
-    .eq('owner_id', user.id)
+    .from('studio_members')
+    .select(`
+      studio:studios!studio_id (
+        id
+      )
+    `)
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .eq('status', 'active')
 
-  const ownedStudioList = (ownedStudios || []).map(studio => ({
-    studio_id: studio.id,
+  const ownedStudioList = (ownedStudios || []).map(member => ({
+    studio_id: member.studio.id,
     role: 'owner',
   }))
 

@@ -6,16 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
 import { MemberCountCard } from '@/components/studio/member-count-card'
+import { getUserStudio } from '../../lib/supabase/studios'
 
 export default async function StudioDashboard() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    redirect('/auth/login')
+  
+  // Check if user has a studio (either owns one or is a member)
+  const userStudio = await getUserStudio()
+  if (!userStudio) {
+    redirect('/studio/create')
   }
-
   return (
     <div className="space-y-6 md:space-y-8">
       {/* Welcome Section */}

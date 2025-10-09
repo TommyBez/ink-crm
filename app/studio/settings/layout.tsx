@@ -16,15 +16,20 @@ export default async function SettingsLayout({
   let studioId: string | null = null
   if (user) {
     // Check if user owns a studio
-    const { data: ownedStudio } = await supabase
-      .from('studios')
-      .select('id')
-      .eq('owner_id', user.id)
-      .eq('is_active', true)
+    const { data: ownedStudioMember } = await supabase
+      .from('studio_members')
+      .select(`
+        studio:studios!studio_id (
+          id
+        )
+      `)
+      .eq('user_id', user.id)
+      .eq('role', 'owner')
+      .eq('status', 'active')
       .maybeSingle()
 
-    if (ownedStudio) {
-      studioId = ownedStudio.id
+    if (ownedStudioMember?.studio) {
+      studioId = ownedStudioMember.studio.id
     } else {
       // Check if user is a member
       const { data: memberRecord } = await supabase
