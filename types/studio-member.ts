@@ -1,5 +1,9 @@
 /**
  * TypeScript types for Studio Member entities
+ * 
+ * @deprecated This file is deprecated. Use types/user-profile.ts instead.
+ * The studio_members table has been replaced with the user_profiles system.
+ * This file is kept for backward compatibility during migration.
  */
 
 export type StudioMemberRole = 'owner' | 'admin' | 'artist' | 'receptionist'

@@ -66,7 +66,7 @@
   - [x] 1.9 Add table and column comments for documentation
   - [x] 1.10 Update studio_invitations table to change role column from studio_member_role to user_role enum
 
-- [ ] 2.0 Implement Database Helper Functions and RLS Policies
+- [x] 2.0 Implement Database Helper Functions and RLS Policies
   - [x] 2.1 Create function `get_user_role(user_uuid)` that returns the user's role from user_profiles
   - [x] 2.2 Create function `is_studio_admin(user_uuid)` that checks if user has studio_admin role
   - [x] 2.3 Create function `get_user_studio(user_uuid)` that returns the user's studio_id from user_profiles
@@ -86,16 +86,16 @@
   - [x] 2.17 Drop studio_member_role and studio_member_status enums
 
 - [ ] 3.0 Create TypeScript Types for User Profiles
-  - [ ] 3.1 Create types/user-profile.ts with UserRole type ('studio_admin' | 'studio_member')
-  - [ ] 3.2 Add UserStatus type ('active' | 'pending' | 'inactive')
-  - [ ] 3.3 Add UserProfile interface with all fields matching database schema
-  - [ ] 3.4 Add CreateUserProfileInput type for profile creation
-  - [ ] 3.5 Add UpdateUserProfileInput type for profile updates
-  - [ ] 3.6 Add helper function getRoleLabel(role: UserRole) to return Italian labels
-  - [ ] 3.7 Add helper function getRoleBadgeVariant(role: UserRole) for UI styling
-  - [ ] 3.8 Update types/studio-invitation.ts to import and use UserRole instead of StudioMemberRole
-  - [ ] 3.9 Update StudioInvitation interface to use role: UserRole
-  - [ ] 3.10 Mark types/studio-member.ts as deprecated with @deprecated comment or remove file entirely
+  - [x] 3.1 Create types/user-profile.ts with UserRole type ('studio_admin' | 'studio_member')
+  - [x] 3.2 Add UserStatus type ('active' | 'pending' | 'inactive')
+  - [x] 3.3 Add UserProfile interface with all fields matching database schema
+  - [x] 3.4 Add CreateUserProfileInput type for profile creation
+  - [x] 3.5 Add UpdateUserProfileInput type for profile updates
+  - [x] 3.6 Add helper function getRoleLabel(role: UserRole) to return Italian labels
+  - [x] 3.7 Add helper function getRoleBadgeVariant(role: UserRole) for UI styling
+  - [x] 3.8 Update types/studio-invitation.ts to import and use UserRole instead of StudioMemberRole
+  - [x] 3.9 Update StudioInvitation interface to use role: UserRole
+  - [x] 3.10 Mark types/studio-member.ts as deprecated with @deprecated comment or remove file entirely
 
 - [ ] 4.0 Implement User Profile Client Library Functions
   - [ ] 4.1 Create lib/supabase/user-profiles.ts file

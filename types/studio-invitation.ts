@@ -2,7 +2,7 @@
  * TypeScript types for Studio Invitation entities
  */
 
-import type { StudioMemberRole } from './studio-member'
+import type { UserRole } from './user-profile'
 
 // Enum for invitation status, matching the PostgreSQL enum
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired'
@@ -12,7 +12,7 @@ export type StudioInvitation = {
   studio_id: string
   invited_email: string
   invited_by: string // User ID of who sent the invitation
-  role: StudioMemberRole
+  role: UserRole
   status: InvitationStatus
   token: string
   message: string | null
@@ -27,7 +27,7 @@ export type StudioInvitation = {
 export type CreateStudioInvitationInput = {
   studio_id: string
   invited_email: string
-  role: StudioMemberRole
+  role: UserRole
   message?: string | null
 }
 
@@ -71,16 +71,12 @@ export type InvitationEmailData = {
 }
 
 // Helper function to get role label in Italian
-export function getRoleLabel(role: StudioMemberRole): string {
+export function getRoleLabel(role: UserRole): string {
   switch (role) {
-    case 'owner':
-      return 'Proprietario'
-    case 'admin':
-      return 'Amministratore'
-    case 'artist':
-      return 'Artista'
-    case 'receptionist':
-      return 'Receptionist'
+    case 'studio_admin':
+      return 'Amministratore Studio'
+    case 'studio_member':
+      return 'Membro Studio'
     default:
       return role
   }
