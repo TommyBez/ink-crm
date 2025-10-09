@@ -137,17 +137,17 @@
   - [x] 6.9 Update app-sidebar.tsx navigation items based on studio_admin vs studio_member role
   - [x] 6.10 Remove any studio_members references from all components
 
-- [ ] 7.0 Update Middleware and Authentication Flow
-  - [ ] 7.1 Update lib/supabase/middleware.ts to import getUserProfile function
-  - [ ] 7.2 Add logic to fetch user profile after authentication check
-  - [ ] 7.3 Add redirect to /studio/create if user is studio_admin with no studio_id
-  - [ ] 7.4 Add redirect to /waiting if user is studio_member with no studio_id (pending invitation)
-  - [ ] 7.5 Allow access to /studio routes only if user has studio_id assigned
-  - [ ] 7.6 Allow studio_admins to access /studio/create route
-  - [ ] 7.7 Update middleware.ts config matcher to include new routes
-  - [ ] 7.8 Add proper error handling for profile fetch failures
-  - [ ] 7.9 Create app/waiting/page.tsx for studio_members awaiting invitation acceptance
-  - [ ] 7.10 Add helpful message in waiting page explaining invitation status
+- [x] 7.0 Update Middleware and Authentication Flow
+  - [x] 7.1 Update lib/supabase/middleware.ts to import getUserProfile function
+  - [x] 7.2 Add logic to fetch user profile after authentication check
+  - [x] 7.3 Add redirect to /studio/create if user is studio_admin with no studio_id
+  - [x] 7.4 Add redirect to /waiting if user is studio_member with no studio_id (pending invitation)
+  - [x] 7.5 Allow access to /studio routes only if user has studio_id assigned
+  - [x] 7.6 Allow studio_admins to access /studio/create route
+  - [x] 7.7 Update middleware.ts config matcher to include new routes
+  - [x] 7.8 Add proper error handling for profile fetch failures
+  - [x] 7.9 Create app/waiting/page.tsx for studio_members awaiting invitation acceptance
+  - [x] 7.10 Add helpful message in waiting page explaining invitation status
 
 - [ ] 8.0 Update Studio Pages and Routes
   - [ ] 8.1 Update app/studio/layout.tsx to check user profile and studio assignment

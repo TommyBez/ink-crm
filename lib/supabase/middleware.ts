@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
+import { getUserProfile } from './user-profiles'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -57,6 +58,58 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)
+  }
+
+  // If user is authenticated, check their profile and handle redirects
+  if (user) {
+    const userId = user.sub || user.id
+    try {
+      const profile = await getUserProfile(userId)
+      
+      if (profile) {
+      // If user is studio_admin with no studio, redirect to create studio page
+      if (profile.role === 'studio_admin' && !profile.studio_id && 
+          !request.nextUrl.pathname.startsWith('/studio/create') &&
+          !request.nextUrl.pathname.startsWith('/auth/')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/studio/create'
+        return NextResponse.redirect(url)
+      }
+      
+      // If user is studio_member with no studio, redirect to waiting page
+      if (profile.role === 'studio_member' && !profile.studio_id &&
+          !request.nextUrl.pathname.startsWith('/waiting') &&
+          !request.nextUrl.pathname.startsWith('/auth/')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/waiting'
+        return NextResponse.redirect(url)
+      }
+      
+      // Protect studio routes - only allow access if user has a studio
+      if (request.nextUrl.pathname.startsWith('/studio') && 
+          !request.nextUrl.pathname.startsWith('/studio/create') &&
+          !profile.studio_id) {
+        const url = request.nextUrl.clone()
+        if (profile.role === 'studio_admin') {
+          url.pathname = '/studio/create'
+        } else {
+          url.pathname = '/waiting'
+        }
+        return NextResponse.redirect(url)
+      }
+      
+      // Allow studio_admins to access /studio/create even without a studio
+      if (request.nextUrl.pathname.startsWith('/studio/create') && 
+          profile.role !== 'studio_admin') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/waiting'
+        return NextResponse.redirect(url)
+      }
+    } catch (error) {
+      console.error('Error fetching user profile in middleware:', error)
+      // If profile fetch fails, allow the request to continue
+      // This prevents middleware from breaking the app
+    }
   }
 
   
