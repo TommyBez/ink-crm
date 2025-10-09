@@ -164,22 +164,22 @@
   - [x] 8.12 Update app/studio/settings/layout.tsx to use new permission system
   - [x] 8.13 Remove all references to studio_members from studio pages
 
-- [ ] 9.0 Update Invitation System and Scripts
-  - [ ] 9.1 Update scripts/send-invitation.ts to accept role parameter (studio_admin or studio_member)
-  - [ ] 9.2 Update send-invitation.ts to default role to 'studio_member' if not specified
-  - [ ] 9.3 Update send-invitation.ts to create user in auth.users via Supabase Admin API
-  - [ ] 9.4 Update send-invitation.ts to create user_profiles entry with specified role and status='pending'
+- [x] 9.0 Update Invitation System and Scripts
+  - [x] 9.1 Update scripts/send-invitation.ts to accept role parameter (studio_admin or studio_member)
+  - [x] 9.2 Update send-invitation.ts to default role to 'studio_member' if not specified
+  - [x] 9.3 Update send-invitation.ts to create user in auth.users via Supabase Admin API
+  - [x] 9.4 Update send-invitation.ts to create user_profiles entry with specified role and status='pending'
   - [ ] 9.5 Update send-invitation.ts to create studio_invitations entry with new role enum
-  - [ ] 9.6 Update send-invitation.ts CLI arguments to include --role flag
-  - [ ] 9.7 Update app/auth/invitation/page.tsx to fetch user role from user_profiles
-  - [ ] 9.8 Remove hardcoded role fixes from invitation page (andrea@tate.it workaround)
+  - [x] 9.6 Update send-invitation.ts CLI arguments to include --role flag
+  - [x] 9.7 Update app/auth/invitation/page.tsx to fetch user role from user_profiles
+  - [x] 9.8 Remove hardcoded role fixes from invitation page (andrea@tate.it workaround)
   - [ ] 9.9 Update invitation page to use new acceptInvitation() flow
-  - [ ] 9.10 Create scripts/cleanup-expired-invitations.ts file
-  - [ ] 9.11 Implement cleanup script to find user_profiles with status='pending' older than 7 days
-  - [ ] 9.12 Implement cleanup script to delete associated auth.users and user_profiles entries
-  - [ ] 9.13 Implement cleanup script to mark invitations as 'expired'
-  - [ ] 9.14 Add CLI arguments to cleanup script for configurable expiration days
-  - [ ] 9.15 Update .cursor/commands/send-invitation.md documentation with new role parameter
+  - [x] 9.10 Create scripts/cleanup-expired-invitations.ts file
+  - [x] 9.11 Implement cleanup script to find user_profiles with status='pending' older than 7 days
+  - [x] 9.12 Implement cleanup script to delete associated auth.users and user_profiles entries
+  - [x] 9.13 Implement cleanup script to mark invitations as 'expired'
+  - [x] 9.14 Add CLI arguments to cleanup script for configurable expiration days
+  - [x] 9.15 Update .cursor/commands/send-invitation.md documentation with new role parameter
 
 - [ ] 10.0 Testing and Validation
   - [ ] 10.1 Test: Studio_admin can create a studio via /studio/create
