@@ -136,7 +136,7 @@ export async function sendInvitation(
 
     // Create user profile with the specified role
     console.log('👤 Creating user profile...');
-    const userProfile = await createUserProfile(supabaseResponse.user.id, role);
+    const userProfile = await createUserProfile(supabaseResponse.id, role);
     console.log(`✅ User profile created successfully`);
 
     console.log('\n🎉 Invitation sent successfully!');

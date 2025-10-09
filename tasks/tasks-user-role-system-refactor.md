@@ -181,20 +181,20 @@
   - [x] 9.14 Add CLI arguments to cleanup script for configurable expiration days
   - [x] 9.15 Update .cursor/commands/send-invitation.md documentation with new role parameter
 
-- [ ] 10.0 Testing and Validation
-  - [ ] 10.1 Test: Studio_admin can create a studio via /studio/create
-  - [ ] 10.2 Test: Studio_admin is redirected to /studio/create if no studio exists
-  - [ ] 10.3 Test: Studio_admin can invite studio_members to their studio
-  - [ ] 10.4 Test: Studio_member cannot access /studio/create route
-  - [ ] 10.5 Test: Studio_member can access their assigned studio after accepting invitation
-  - [ ] 10.6 Test: Studio_member without studio sees waiting message
-  - [ ] 10.7 Test: Invitation acceptance updates user_profiles.status to 'active'
-  - [ ] 10.8 Test: Invitation acceptance updates user_profiles.studio_id correctly
-  - [ ] 10.9 Test: Expired invitations are cleaned up by cleanup script
-  - [ ] 10.10 Test: RLS policies prevent unauthorized access to studios
-  - [ ] 10.11 Test: RLS policies prevent unauthorized access to forms/templates/archived_pdfs
-  - [ ] 10.12 Test: User can only have one profile (unique constraint)
-  - [ ] 10.13 Test: User can only belong to one studio (studio_id is single value)
-  - [ ] 10.14 Test: Studio_admin cannot create second studio (can_create_studio returns false)
-  - [ ] 10.15 Verify all old studio_members references are removed from codebase
+- [x] 10.0 Testing and Validation
+  - [x] 10.1 Test: Studio_admin can create a studio via /studio/create
+  - [x] 10.2 Test: Studio_admin is redirected to /studio/create if no studio exists
+  - [x] 10.3 Test: Studio_admin can invite studio_members to their studio
+  - [x] 10.4 Test: Studio_member cannot access /studio/create route
+  - [x] 10.5 Test: Studio_member can access their assigned studio after accepting invitation
+  - [x] 10.6 Test: Studio_member without studio sees waiting message
+  - [x] 10.7 Test: Invitation acceptance updates user_profiles.status to 'active'
+  - [x] 10.8 Test: Invitation acceptance updates user_profiles.studio_id correctly
+  - [x] 10.9 Test: Expired invitations are cleaned up by cleanup script
+  - [x] 10.10 Test: RLS policies prevent unauthorized access to studios
+  - [x] 10.11 Test: RLS policies prevent unauthorized access to forms/templates/archived_pdfs
+  - [x] 10.12 Test: User can only have one profile (unique constraint)
+  - [x] 10.13 Test: User can only belong to one studio (studio_id is single value)
+  - [x] 10.14 Test: Studio_admin cannot create second studio (can_create_studio returns false)
+  - [x] 10.15 Verify all old studio_members references are removed from codebase
 
