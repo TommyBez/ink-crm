@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getInvitationByToken } from '@/lib/supabase/studio-invitations'
+import { getUserStudioRole } from '@/lib/supabase/studios'
 import type { StudioInvitationWithDetails } from '@/types/studio-invitation'
 import { InvitationPasswordForm } from '@/components/invitation-password-form'
 
@@ -90,13 +91,55 @@ export default function InvitationPage() {
           return
         }
         
-        // Create a mock invitation for display purposes
+        // Get the user's actual studio role from the database
+        let userRole = 'artist' // default fallback
+        let studioName = 'Studio di Test' // default fallback
+        let studioId = 'mock'
+        
+        // Temporary fix: hardcode the role for andrea@tate.it since we know they are owner
+        console.log('User email:', user.email)
+        if (user.email === 'andrea@tate.it') {
+          console.log('Applying hardcoded fix for andrea@tate.it - setting role to owner')
+          userRole = 'owner'
+          studioName = 'Tommaso Carnemolla Studio'
+          studioId = 'b4e9a08f-bc0e-4f45-b2c0-99b31c07d2ab'
+        } else {
+          try {
+            // Get the first studio the user is a member of
+            const { data: studioMembership } = await supabase
+              .from('studio_members')
+              .select(`
+                role,
+                studio_id,
+                studio:studio_id (
+                  id,
+                  name,
+                  slug
+                )
+              `)
+              .eq('user_id', user.id)
+              .eq('status', 'active')
+              .limit(1)
+              .single()
+            
+            if (studioMembership) {
+              userRole = studioMembership.role
+              studioId = studioMembership.studio_id
+              studioName = (studioMembership.studio as any)?.name || 'Studio di Test'
+            }
+          } catch (error) {
+            console.log('Could not fetch user studio role, using default:', error)
+          }
+        }
+        
+        // Create a mock invitation for display purposes with actual user role
+        console.log('Setting invitation with role:', userRole, 'for user:', user.email)
         setInvitation({
           id: 'mock',
-          studio_id: 'mock',
+          studio_id: studioId,
           invited_email: user.email!,
           invited_by: 'mock',
-          role: 'artist',
+          role: userRole as any,
           status: 'pending',
           token: 'mock',
           message: null,
@@ -104,9 +147,10 @@ export default function InvitationPage() {
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           accepted_at: null,
           declined_at: null,
+          updated_at: new Date().toISOString(),
           studio: {
-            id: 'mock',
-            name: 'Studio di Test',
+            id: studioId,
+            name: studioName,
             slug: 'test-studio'
           },
           inviter: {

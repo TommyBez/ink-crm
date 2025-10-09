@@ -16,6 +16,11 @@ export default async function StudioLayout({
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Redirect to login if user is not authenticated
+  if (!user) {
+    return <div>Please log in to access the studio.</div>
+  }
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="flex h-screen w-full">
