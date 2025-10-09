@@ -85,7 +85,7 @@
   - [x] 2.16 Drop studio_members table
   - [x] 2.17 Drop studio_member_role and studio_member_status enums
 
-- [ ] 3.0 Create TypeScript Types for User Profiles
+- [x] 3.0 Create TypeScript Types for User Profiles
   - [x] 3.1 Create types/user-profile.ts with UserRole type ('studio_admin' | 'studio_member')
   - [x] 3.2 Add UserStatus type ('active' | 'pending' | 'inactive')
   - [x] 3.3 Add UserProfile interface with all fields matching database schema
@@ -98,16 +98,16 @@
   - [x] 3.10 Mark types/studio-member.ts as deprecated with @deprecated comment or remove file entirely
 
 - [ ] 4.0 Implement User Profile Client Library Functions
-  - [ ] 4.1 Create lib/supabase/user-profiles.ts file
-  - [ ] 4.2 Implement getUserProfile(userId?) function to fetch user profile from user_profiles table
-  - [ ] 4.3 Implement createUserProfile(userId, role, studioId?) function to insert new profile
-  - [ ] 4.4 Implement updateUserProfile(userId, updates) function to update profile fields
-  - [ ] 4.5 Implement getUserRole(userId?) function to get just the role field
-  - [ ] 4.6 Implement isStudioAdmin(userId?) function to check if user has studio_admin role
-  - [ ] 4.7 Implement canCreateStudio(userId?) function to check if studio_admin with no studio
-  - [ ] 4.8 Implement getUserStudioId(userId?) function to get user's studio_id
-  - [ ] 4.9 Add error handling and logging to all functions
-  - [ ] 4.10 Add JSDoc comments to all exported functions
+  - [x] 4.1 Create lib/supabase/user-profiles.ts file
+  - [x] 4.2 Implement getUserProfile(userId?) function to fetch user profile from user_profiles table
+  - [x] 4.3 Implement createUserProfile(userId, role, studioId?) function to insert new profile
+  - [x] 4.4 Implement updateUserProfile(userId, updates) function to update profile fields
+  - [x] 4.5 Implement getUserRole(userId?) function to get just the role field
+  - [x] 4.6 Implement isStudioAdmin(userId?) function to check if user has studio_admin role
+  - [x] 4.7 Implement canCreateStudio(userId?) function to check if studio_admin with no studio
+  - [x] 4.8 Implement getUserStudioId(userId?) function to get user's studio_id
+  - [x] 4.9 Add error handling and logging to all functions
+  - [x] 4.10 Add JSDoc comments to all exported functions
 
 - [ ] 5.0 Update Studio and Invitation Client Libraries
   - [ ] 5.1 Update lib/supabase/studios.ts - replace getUserStudio() to query user_profiles.studio_id
