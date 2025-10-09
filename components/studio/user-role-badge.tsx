@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { getUserStudioRole } from '@/lib/supabase/studios'
+import { getUserProfile } from '@/lib/supabase/user-profiles'
 import { createClient } from '@/lib/supabase/client'
 
 export function UserRoleBadge() {
@@ -22,29 +22,10 @@ export function UserRoleBadge() {
           return
         }
 
-        // Check if user is an owner of any studio
-        const { data: ownedStudioMember } = await supabase
-          .from('studio_members')
-          .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'owner')
-          .eq('status', 'active')
-          .maybeSingle()
-
-        if (ownedStudioMember) {
-          setUserRole('owner')
-        } else {
-          // Check if user is a member
-          const { data: memberRecord } = await supabase
-            .from('studio_members')
-            .select('role')
-            .eq('user_id', user.id)
-            .eq('status', 'active')
-            .maybeSingle()
-
-          if (memberRecord) {
-            setUserRole(memberRecord.role)
-          }
+        // Get user profile from the new user_profiles system
+        const profile = await getUserProfile(user.id)
+        if (profile) {
+          setUserRole(profile.role)
         }
       } catch (error) {
         console.error('Error loading user role:', error)
@@ -66,14 +47,10 @@ export function UserRoleBadge() {
 
   const getRoleInfo = (role: string) => {
     switch (role) {
-      case 'owner':
-        return { label: 'Proprietario', variant: 'default' as const }
-      case 'admin':
-        return { label: 'Amministratore', variant: 'secondary' as const }
-      case 'artist':
-        return { label: 'Artista', variant: 'outline' as const }
-      case 'receptionist':
-        return { label: 'Receptionist', variant: 'outline' as const }
+      case 'studio_admin':
+        return { label: 'Amministratore', variant: 'default' as const }
+      case 'studio_member':
+        return { label: 'Membro', variant: 'secondary' as const }
       default:
         return { label: role, variant: 'outline' as const }
     }

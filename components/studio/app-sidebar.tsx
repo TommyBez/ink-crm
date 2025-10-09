@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar'
 import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
-import { getUserStudioRole } from '@/lib/supabase/studios'
+import { getUserProfile } from '@/lib/supabase/user-profiles'
 
 type NavigationItem = {
   title: string
@@ -27,41 +27,15 @@ export async function AppSidebar() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Get user's studio role for permission-based navigation
+  // Get user's profile for permission-based navigation
   let userRole: string | null = null
   let studioId: string | null = null
   
   if (user) {
-    // Check if user owns a studio
-    const { data: ownedStudioMember } = await supabase
-      .from('studio_members')
-      .select(`
-        studio:studios!studio_id (
-          id
-        ),
-        role
-      `)
-      .eq('user_id', user.id)
-      .eq('role', 'owner')
-      .eq('status', 'active')
-      .maybeSingle()
-
-    if (ownedStudioMember?.studio) {
-      studioId = ownedStudioMember.studio.id
-      userRole = 'owner'
-    } else {
-      // Check if user is a member
-      const { data: memberRecord } = await supabase
-        .from('studio_members')
-        .select('studio_id, role')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .maybeSingle()
-
-      if (memberRecord) {
-        studioId = memberRecord.studio_id
-        userRole = memberRecord.role
-      }
+    const profile = await getUserProfile(user.id)
+    if (profile) {
+      userRole = profile.role
+      studioId = profile.studio_id
     }
   }
 
@@ -107,10 +81,8 @@ export async function AppSidebar() {
 
     // Define role permissions
     const rolePermissions: Record<string, string[]> = {
-      owner: ['manage_members', 'edit_studio', 'view_studio', 'view_templates', 'create_templates', 'edit_templates', 'delete_templates', 'view_forms', 'create_forms', 'edit_forms', 'delete_forms', 'view_archived_pdfs', 'create_archived_pdfs', 'edit_archived_pdfs', 'delete_archived_pdfs'],
-      admin: ['manage_members', 'edit_studio', 'view_studio', 'view_templates', 'create_templates', 'edit_templates', 'delete_templates', 'view_forms', 'create_forms', 'edit_forms', 'delete_forms', 'view_archived_pdfs', 'create_archived_pdfs', 'edit_archived_pdfs', 'delete_archived_pdfs'],
-      artist: ['view_studio', 'view_templates', 'create_templates', 'edit_templates', 'delete_templates', 'view_forms', 'create_forms', 'edit_forms', 'delete_forms', 'view_archived_pdfs', 'create_archived_pdfs', 'edit_archived_pdfs', 'delete_archived_pdfs'],
-      receptionist: ['view_studio', 'view_templates', 'view_forms', 'create_forms', 'edit_forms', 'view_archived_pdfs'],
+      studio_admin: ['manage_members', 'edit_studio', 'view_studio', 'view_templates', 'create_templates', 'edit_templates', 'delete_templates', 'view_forms', 'create_forms', 'edit_forms', 'delete_forms', 'view_archived_pdfs', 'create_archived_pdfs', 'edit_archived_pdfs', 'delete_archived_pdfs'],
+      studio_member: ['view_studio', 'view_templates', 'create_templates', 'edit_templates', 'delete_templates', 'view_forms', 'create_forms', 'edit_forms', 'delete_forms', 'view_archived_pdfs', 'create_archived_pdfs', 'edit_archived_pdfs', 'delete_archived_pdfs'],
     }
 
     const userPermissions = rolePermissions[userRole] || []
@@ -162,10 +134,8 @@ export async function AppSidebar() {
                   </p>
                   {userRole && (
                     <p className="truncate text-muted-foreground text-xs">
-                      Ruolo: {userRole === 'owner' ? 'Proprietario' : 
-                              userRole === 'admin' ? 'Amministratore' :
-                              userRole === 'artist' ? 'Artista' :
-                              userRole === 'receptionist' ? 'Receptionist' : userRole}
+                      Ruolo: {userRole === 'studio_admin' ? 'Amministratore Studio' : 
+                              userRole === 'studio_member' ? 'Membro Studio' : userRole}
                     </p>
                   )}
                 </div>

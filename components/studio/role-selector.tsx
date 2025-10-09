@@ -11,44 +11,32 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Check, ChevronDown } from 'lucide-react'
-import type { StudioMemberRole } from '@/types/studio-member'
+import type { UserRole } from '@/types/user-profile'
 
 interface RoleSelectorProps {
-  currentRole: StudioMemberRole
-  onRoleChange: (role: StudioMemberRole) => void
+  currentRole: UserRole
+  onRoleChange: (role: UserRole) => void
   disabled?: boolean
   compact?: boolean
 }
 
 const roleOptions: Array<{
-  value: StudioMemberRole
+  value: UserRole
   label: string
   description: string
   permissions: string[]
 }> = [
   {
-    value: 'owner',
-    label: 'Proprietario',
-    description: 'Accesso completo a tutto lo studio',
-    permissions: ['Tutti i permessi'],
+    value: 'studio_admin',
+    label: 'Amministratore Studio',
+    description: 'Può creare e gestire uno studio, invitare membri',
+    permissions: ['Creazione studio', 'Gestione membri', 'Modifica studio', 'Gestione template', 'Gestione moduli'],
   },
   {
-    value: 'admin',
-    label: 'Amministratore',
-    description: 'Gestione completa tranne eliminazione studio',
-    permissions: ['Gestione membri', 'Modifica studio', 'Gestione template', 'Gestione moduli'],
-  },
-  {
-    value: 'artist',
-    label: 'Artista',
-    description: 'Gestione template e moduli clienti',
+    value: 'studio_member',
+    label: 'Membro Studio',
+    description: 'Può gestire template e moduli dello studio',
     permissions: ['Gestione template', 'Gestione moduli', 'Visualizzazione PDF'],
-  },
-  {
-    value: 'receptionist',
-    label: 'Receptionist',
-    description: 'Gestione moduli clienti e visualizzazione',
-    permissions: ['Gestione moduli', 'Visualizzazione template', 'Visualizzazione PDF'],
   },
 ]
 
@@ -66,7 +54,7 @@ export function RoleSelector({
     return (
       <Select
         value={currentRole}
-        onValueChange={(value: StudioMemberRole) => onRoleChange(value)}
+        onValueChange={(value: UserRole) => onRoleChange(value)}
         disabled={disabled}
       >
         <SelectTrigger className="w-[180px]">
@@ -97,7 +85,7 @@ export function RoleSelector({
 
       <Select
         value={currentRole}
-        onValueChange={(value: StudioMemberRole) => onRoleChange(value)}
+        onValueChange={(value: UserRole) => onRoleChange(value)}
         disabled={disabled}
       >
         <SelectTrigger>
@@ -134,17 +122,13 @@ export function RoleSelector({
   )
 }
 
-export function RoleBadge({ role }: { role: StudioMemberRole }) {
-  const getRoleInfo = (role: StudioMemberRole) => {
+export function RoleBadge({ role }: { role: UserRole }) {
+  const getRoleInfo = (role: UserRole) => {
     switch (role) {
-      case 'owner':
-        return { label: 'Proprietario', variant: 'default' as const }
-      case 'admin':
-        return { label: 'Amministratore', variant: 'secondary' as const }
-      case 'artist':
-        return { label: 'Artista', variant: 'outline' as const }
-      case 'receptionist':
-        return { label: 'Receptionist', variant: 'outline' as const }
+      case 'studio_admin':
+        return { label: 'Amministratore Studio', variant: 'default' as const }
+      case 'studio_member':
+        return { label: 'Membro Studio', variant: 'secondary' as const }
       default:
         return { label: role, variant: 'outline' as const }
     }

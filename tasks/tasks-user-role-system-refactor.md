@@ -109,7 +109,7 @@
   - [x] 4.9 Add error handling and logging to all functions
   - [x] 4.10 Add JSDoc comments to all exported functions
 
-- [ ] 5.0 Update Studio and Invitation Client Libraries
+- [x] 5.0 Update Studio and Invitation Client Libraries
   - [x] 5.1 Update lib/supabase/studios.ts - replace getUserStudio() to query user_profiles.studio_id
   - [x] 5.2 Update hasStudioPermission() to check user_profiles.role instead of studio_members.role
   - [x] 5.3 Update isStudioOwner() to only check studios.owner_id (keep existing logic)
@@ -125,17 +125,17 @@
   - [ ] 5.13 Implement declineInvitation() to delete user from auth.users and user_profiles
   - [ ] 5.14 Update declineInvitation() to mark invitation as declined
 
-- [ ] 6.0 Update UI Components for New Role System
-  - [ ] 6.1 Update components/studio/user-role-badge.tsx to handle only studio_admin and studio_member
-  - [ ] 6.2 Update getRoleLabel() in user-role-badge.tsx to return "Amministratore" and "Membro"
-  - [ ] 6.3 Update components/studio/role-selector.tsx to show only two role options
-  - [ ] 6.4 Remove owner, admin, artist, receptionist options from role-selector.tsx
-  - [ ] 6.5 Update components/studio/studio-selector.tsx to import getUserProfile from user-profiles.ts
-  - [ ] 6.6 Update studio-selector.tsx to check user_profiles for role and studio
-  - [ ] 6.7 Update studio-selector.tsx to show "Create Studio" only for studio_admins with no studio
-  - [ ] 6.8 Update components/studio/app-sidebar.tsx to fetch user role from user_profiles
-  - [ ] 6.9 Update app-sidebar.tsx navigation items based on studio_admin vs studio_member role
-  - [ ] 6.10 Remove any studio_members references from all components
+- [x] 6.0 Update UI Components for New Role System
+  - [x] 6.1 Update components/studio/user-role-badge.tsx to handle only studio_admin and studio_member
+  - [x] 6.2 Update getRoleLabel() in user-role-badge.tsx to return "Amministratore" and "Membro"
+  - [x] 6.3 Update components/studio/role-selector.tsx to show only two role options
+  - [x] 6.4 Remove owner, admin, artist, receptionist options from role-selector.tsx
+  - [x] 6.5 Update components/studio/studio-selector.tsx to import getUserProfile from user-profiles.ts
+  - [x] 6.6 Update studio-selector.tsx to check user_profiles for role and studio
+  - [x] 6.7 Update studio-selector.tsx to show "Create Studio" only for studio_admins with no studio
+  - [x] 6.8 Update components/studio/app-sidebar.tsx to fetch user role from user_profiles
+  - [x] 6.9 Update app-sidebar.tsx navigation items based on studio_admin vs studio_member role
+  - [x] 6.10 Remove any studio_members references from all components
 
 - [ ] 7.0 Update Middleware and Authentication Flow
   - [ ] 7.1 Update lib/supabase/middleware.ts to import getUserProfile function

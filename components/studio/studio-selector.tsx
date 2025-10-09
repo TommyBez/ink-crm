@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Building2, Users, ArrowRight, AlertCircle } from 'lucide-react'
 import { getUserStudio, getUserStudioRole, canUserJoinStudio } from '@/lib/supabase/studios'
+import { getUserProfile, canUserCreateStudio } from '@/lib/supabase/user-profiles'
 import { getInvitationsByEmail } from '@/lib/supabase/studio-invitations'
 import { createClient } from '@/lib/supabase/client'
 import type { Studio } from '@/types/studio'
@@ -45,14 +46,16 @@ export function StudioSelector() {
 
       setUser(user)
 
-      // Get user's current studio
-      const studio = await getUserStudio()
-      setUserStudio(studio)
-
-      if (studio) {
-        // Get user's role in the studio
-        const role = await getUserStudioRole(studio.id)
-        setUserRole(role)
+      // Get user's profile to check role and studio
+      const profile = await getUserProfile(user.id)
+      if (profile) {
+        setUserRole(profile.role)
+        
+        // Get studio if user has one
+        if (profile.studio_id) {
+          const studio = await getUserStudio()
+          setUserStudio(studio)
+        }
       }
 
       // Check if user can join a studio
@@ -80,14 +83,10 @@ export function StudioSelector() {
 
   const getRoleLabel = (role: string) => {
     switch (role) {
-      case 'owner':
-        return 'Proprietario'
-      case 'admin':
-        return 'Amministratore'
-      case 'artist':
-        return 'Artista'
-      case 'receptionist':
-        return 'Receptionist'
+      case 'studio_admin':
+        return 'Amministratore Studio'
+      case 'studio_member':
+        return 'Membro Studio'
       default:
         return role
     }
@@ -95,14 +94,10 @@ export function StudioSelector() {
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
-      case 'owner':
+      case 'studio_admin':
         return 'default'
-      case 'admin':
+      case 'studio_member':
         return 'secondary'
-      case 'artist':
-        return 'outline'
-      case 'receptionist':
-        return 'outline'
       default:
         return 'outline'
     }
@@ -218,11 +213,18 @@ export function StudioSelector() {
                     {canJoin.reason}
                   </AlertDescription>
                 </Alert>
-              ) : (
+              ) : userRole === 'studio_admin' ? (
                 <Button onClick={handleCreateStudio} className="w-full">
                   <Building2 className="h-4 w-4 mr-2" />
                   Crea il Tuo Studio
                 </Button>
+              ) : (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Solo gli amministratori studio possono creare un nuovo studio. Contatta un amministratore per essere invitato.
+                  </AlertDescription>
+                </Alert>
               )}
             </CardContent>
           </Card>

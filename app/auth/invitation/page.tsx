@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getInvitationByToken } from '@/lib/supabase/studio-invitations'
-import { getUserStudioRole } from '@/lib/supabase/studios'
+import { getUserProfile } from '@/lib/supabase/user-profiles'
 import type { StudioInvitationWithDetails } from '@/types/studio-invitation'
 import { InvitationPasswordForm } from '@/components/invitation-password-form'
 
@@ -91,45 +91,33 @@ export default function InvitationPage() {
           return
         }
         
-        // Get the user's actual studio role from the database
-        let userRole = 'artist' // default fallback
+        // Get the user's profile from the new user_profiles system
+        let userRole = 'studio_member' // default fallback
         let studioName = 'Studio di Test' // default fallback
         let studioId = 'mock'
         
-        // Temporary fix: hardcode the role for andrea@tate.it since we know they are owner
-        console.log('User email:', user.email)
-        if (user.email === 'andrea@tate.it') {
-          console.log('Applying hardcoded fix for andrea@tate.it - setting role to owner')
-          userRole = 'owner'
-          studioName = 'Tommaso Carnemolla Studio'
-          studioId = 'b4e9a08f-bc0e-4f45-b2c0-99b31c07d2ab'
-        } else {
-          try {
-            // Get the first studio the user is a member of
-            const { data: studioMembership } = await supabase
-              .from('studio_members')
-              .select(`
-                role,
-                studio_id,
-                studio:studio_id (
-                  id,
-                  name,
-                  slug
-                )
-              `)
-              .eq('user_id', user.id)
-              .eq('status', 'active')
-              .limit(1)
-              .single()
+        try {
+          // Get user profile with studio information
+          const profile = await getUserProfile(user.id)
+          if (profile) {
+            userRole = profile.role
+            studioId = profile.studio_id || 'mock'
             
-            if (studioMembership) {
-              userRole = studioMembership.role
-              studioId = studioMembership.studio_id
-              studioName = (studioMembership.studio as any)?.name || 'Studio di Test'
+            // Get studio name if user has a studio
+            if (profile.studio_id) {
+              const { data: studio } = await supabase
+                .from('studios')
+                .select('name')
+                .eq('id', profile.studio_id)
+                .single()
+              
+              if (studio) {
+                studioName = studio.name
+              }
             }
-          } catch (error) {
-            console.log('Could not fetch user studio role, using default:', error)
           }
+        } catch (error) {
+          console.log('Could not fetch user profile, using default:', error)
         }
         
         // Create a mock invitation for display purposes with actual user role
