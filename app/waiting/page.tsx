@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Clock, Mail, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { getUserProfile } from '@/lib/supabase/user-profiles'
 import { getInvitationsByEmail } from '@/lib/supabase/studio-invitations'
 import type { StudioInvitationWithDetails } from '@/types/studio-invitation'
 
@@ -41,8 +40,13 @@ export default function WaitingPage() {
 
       setUser(user)
 
-      // Get user profile
-      const userProfile = await getUserProfile(user.id)
+      // Get user profile directly from user_profiles table
+      const { data: userProfile } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single()
+      
       setProfile(userProfile)
 
       // Get pending invitations

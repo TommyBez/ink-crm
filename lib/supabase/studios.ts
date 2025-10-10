@@ -130,6 +130,10 @@ export async function createStudio(
 
   // Check if user already has a studio
   const profile = await getUserProfile(user.id)
+  //if user is not admin return error
+  if (profile?.role !== 'studio_admin') {
+    return { studio: null, error: 'Solo gli amministratori studio possono creare uno studio.' }
+  }
   if (profile?.studio_id) {
     // Get studio name for error message
     const { data: existingStudio } = await supabase
@@ -143,22 +147,12 @@ export async function createStudio(
     }
   }
 
-  // Check if slug is already taken
-  const { data: existingStudio } = await supabase
-    .from('studios')
-    .select('id')
-    .eq('slug', input.slug)
-    .maybeSingle()
-
-  if (existingStudio) {
-    return { studio: null, error: 'Questo identificativo URL è già in uso' }
-  }
-
   // Create the studio
   const { data, error } = await supabase
     .from('studios')
     .insert({
       ...input,
+      owner_id: user.id, // Set the owner_id to the current user
       settings: input.settings || {},
       address_country: input.address_country || 'IT',
     })
@@ -168,17 +162,6 @@ export async function createStudio(
   if (error) {
     console.error('Error creating studio:', error)
     return { studio: null, error: 'Errore durante la creazione dello studio' }
-  }
-
-  // Update user profile to assign them to the studio
-  const { error: profileError } = await supabase
-    .from('user_profiles')
-    .update({ studio_id: data.id })
-    .eq('user_id', user.id)
-
-  if (profileError) {
-    console.error('Error updating user profile with studio:', profileError)
-    // Don't fail the studio creation if profile update fails
   }
 
   return { studio: data, error: null }

@@ -50,69 +50,29 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
   const user = data?.claims
   
-  if (!user && !request.nextUrl.pathname.startsWith('/auth/invitation')) {
+  if (!user && request.nextUrl.pathname.startsWith('/auth/invitation')) {
     return supabaseResponse
   }
-  if (!(user || request.nextUrl.pathname.startsWith('/auth'))) {
+  if (!request.nextUrl.pathname.startsWith('/auth') && !user) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)
   }
 
-  // If user is authenticated, check their profile and handle redirects
-  if (user) {
-    const userId = user.sub || user.id
-    try {
-      const profile = await getUserProfile(userId)
+  // If user is authenticated, check studio access
+  if (!!user && request.nextUrl.pathname.startsWith('/studio') && !request.nextUrl.pathname.startsWith('/studio/create')) {
+      // Check if user has a studio
+      const profile = await getUserProfile(user.sub)
       
-      if (profile) {
-      // If user is studio_admin with no studio, redirect to create studio page
-      if (profile.role === 'studio_admin' && !profile.studio_id && 
-          !request.nextUrl.pathname.startsWith('/studio/create') &&
-          !request.nextUrl.pathname.startsWith('/auth/')) {
+      // If user doesn't have a studio, redirect to create
+      if (!profile?.studio_id) {
         const url = request.nextUrl.clone()
         url.pathname = '/studio/create'
         return NextResponse.redirect(url)
       }
-      
-      // If user is studio_member with no studio, redirect to waiting page
-      if (profile.role === 'studio_member' && !profile.studio_id &&
-          !request.nextUrl.pathname.startsWith('/waiting') &&
-          !request.nextUrl.pathname.startsWith('/auth/')) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/waiting'
-        return NextResponse.redirect(url)
-      }
-      
-      // Protect studio routes - only allow access if user has a studio
-      if (request.nextUrl.pathname.startsWith('/studio') && 
-          !request.nextUrl.pathname.startsWith('/studio/create') &&
-          !profile.studio_id) {
-        const url = request.nextUrl.clone()
-        if (profile.role === 'studio_admin') {
-          url.pathname = '/studio/create'
-        } else {
-          url.pathname = '/waiting'
-        }
-        return NextResponse.redirect(url)
-      }
-      
-      // Allow studio_admins to access /studio/create even without a studio
-      if (request.nextUrl.pathname.startsWith('/studio/create') && 
-          profile.role !== 'studio_admin') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/waiting'
-        return NextResponse.redirect(url)
-      }
-    } catch (error) {
-      console.error('Error fetching user profile in middleware:', error)
-      // If profile fetch fails, allow the request to continue
-      // This prevents middleware from breaking the app
-    }
-  }
-
   
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

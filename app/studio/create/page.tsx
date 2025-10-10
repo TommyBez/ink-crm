@@ -10,10 +10,17 @@ import { createStudioAction } from './actions'
 import { useActionState } from 'react'
 import { CreateStudioInput } from '../../../types/studio'
 
+// Helper component to show field errors
+function FieldError({ error }: { error?: string }) {
+  if (!error) return null
+  return <p className="text-sm text-red-600 mt-1">{error}</p>
+}
+
 export default function CreateStudioPage() {
-  const [ state, formAction, isPending] = useActionState(createStudioAction, { success: false, error: undefined, formData: undefined })
+  const [ state, formAction, isPending] = useActionState(createStudioAction, { success: false, error: undefined, fieldErrors: {}, formData: undefined })
   // Get form data from state if available (for error cases)
   const formData = state?.formData as CreateStudioInput || {}
+  const fieldErrors = state?.fieldErrors as Record<string, string> || {}
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -43,6 +50,11 @@ export default function CreateStudioPage() {
             {state?.error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
                 <p className="text-sm text-red-600">{state.error}</p>
+                {Object.keys(fieldErrors).length > 0 && (
+                  <p className="text-xs text-red-500 mt-1">
+                    Controlla i campi evidenziati in rosso per correggere gli errori.
+                  </p>
+                )}
               </div>
             )}
             <form action={formAction} className="space-y-4">
@@ -56,7 +68,9 @@ export default function CreateStudioPage() {
                   placeholder="Il Nome del Tuo Studio"
                   defaultValue={formData.name as string || ''}
                   required
+                  className={fieldErrors.name ? 'border-red-500' : ''}
                 />
+                <FieldError error={fieldErrors.name} />
               </div>
 
               <div className="space-y-2">
@@ -127,14 +141,16 @@ export default function CreateStudioPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email *</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
                   placeholder="studio@esempio.com"
                   defaultValue={formData.email || ''}
+                  className={fieldErrors.email ? 'border-red-500' : ''}
                 />
+                <FieldError error={fieldErrors.email} />
               </div>
 
               <div className="space-y-2">
@@ -145,7 +161,9 @@ export default function CreateStudioPage() {
                   type="url"
                   placeholder="https://www.esempio.com"
                   defaultValue={formData.website || ''}
+                  className={fieldErrors.website ? 'border-red-500' : ''}
                 />
+                <FieldError error={fieldErrors.website} />
               </div>
 
               <div className="space-y-4 pt-4 border-t">
@@ -171,7 +189,9 @@ export default function CreateStudioPage() {
                       type="text"
                       placeholder="12345678901"
                       defaultValue={formData.partita_iva || ''}
+                      className={fieldErrors.partita_iva ? 'border-red-500' : ''}
                     />
+                    <FieldError error={fieldErrors.partita_iva} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="codice_fiscale">Codice Fiscale</Label>
@@ -181,7 +201,9 @@ export default function CreateStudioPage() {
                       type="text"
                       placeholder="RSSMRA80A01H501U"
                       defaultValue={formData.codice_fiscale || ''}
+                      className={fieldErrors.codice_fiscale ? 'border-red-500' : ''}
                     />
+                    <FieldError error={fieldErrors.codice_fiscale} />
                   </div>
                 </div>
               </div>

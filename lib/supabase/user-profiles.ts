@@ -5,7 +5,7 @@
  * which replace the old studio_members system with a global role-based approach.
  */
 
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import type { 
   UserProfile, 
   UserProfileWithDetails, 

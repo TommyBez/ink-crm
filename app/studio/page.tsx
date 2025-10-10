@@ -7,12 +7,13 @@ import italianContent from '@/lib/constants/italian-content'
 import { createClient } from '@/lib/supabase/server'
 import { MemberCountCard } from '@/components/studio/member-count-card'
 import { getUserStudio } from '../../lib/supabase/studios'
+import { getUserProfile } from '../../lib/supabase/user-profiles'
 
 export default async function StudioDashboard() {
   
   // Check if user has a studio (either owns one or is a member)
-  const userStudio = await getUserStudio()
-  if (!userStudio) {
+  const profile = await getUserProfile()
+  if (!profile?.studio_id) {
     redirect('/studio/create')
   }
   return (

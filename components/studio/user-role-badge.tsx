@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
-import { getUserProfile } from '@/lib/supabase/user-profiles'
 import { createClient } from '@/lib/supabase/client'
 
 export function UserRoleBadge() {
@@ -22,8 +21,13 @@ export function UserRoleBadge() {
           return
         }
 
-        // Get user profile from the new user_profiles system
-        const profile = await getUserProfile(user.id)
+        // Get user profile directly from user_profiles table
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('user_id', user.id)
+          .single()
+        
         if (profile) {
           setUserRole(profile.role)
         }

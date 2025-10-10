@@ -1,165 +1,119 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { getInvitationByToken } from '@/lib/supabase/studio-invitations'
-import { getUserProfile } from '@/lib/supabase/user-profiles'
-import type { StudioInvitationWithDetails } from '@/types/studio-invitation'
-import { InvitationPasswordForm } from '@/components/invitation-password-form'
+import { SetPasswordForm } from '@/components/set-password-form'
+
+interface UserData {
+  email: string
+  role: 'studio_admin' | 'studio_member'
+  studioName: string | null
+  profileFound: boolean
+}
 
 export default function InvitationPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const supabase = createClient()
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [invitation, setInvitation] = useState<StudioInvitationWithDetails | null>(null)
-  const [tokenVerified, setTokenVerified] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  const studioToken = searchParams.get('studio_token')
+  const [userData, setUserData] = useState<UserData | null>(null)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    const verifyTokensAndFetchUserData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
 
-  useEffect(() => {
-    if (!mounted) return
-    
-    // Extract tokens from URL hash
-    const hash = window.location.hash
-    const urlParams = new URLSearchParams(hash.substring(1)) // Remove the # and parse
-    const accessToken = urlParams.get('access_token')
-    const refreshToken = urlParams.get('refresh_token')
-    const type = urlParams.get('type')
-    
-    console.log('useEffect running:', { accessToken: !!accessToken, refreshToken: !!refreshToken, type })
-    
-    if (accessToken && refreshToken && type === 'invite') {
-      verifyTokens(accessToken, refreshToken)
-    } else {
-      setError('Parametri di invito mancanti o non validi')
-      setLoading(false)
-    }
-  }, [mounted])
+        // Extract tokens from URL hash
+        const hash = window.location.hash
+        const urlParams = new URLSearchParams(hash.substring(1))
+        const accessToken = urlParams.get('access_token')
+        const refreshToken = urlParams.get('refresh_token')
+        const type = urlParams.get('type')
 
-  const verifyTokens = async (accessToken: string, refreshToken: string) => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      // Set the session using the access token and refresh token
-      const { error: sessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      })
-
-      if (sessionError) {
-        setError(`Errore nella verifica del token: ${sessionError.message}`)
-        return
-      }
-
-      // Check if we have a studio token to verify
-      if (studioToken) {
-        // Then verify the studio invitation token
-        const { invitation: invitationData, error: invitationError } = await getInvitationByToken(studioToken)
-
-        if (invitationError || !invitationData) {
-          setError(invitationError || 'Invito studio non trovato o scaduto')
+        if (!accessToken || !refreshToken || type !== 'invite') {
+          setError('Parametri di invito mancanti o non validi')
           return
         }
 
-        // Check if the email from auth session matches the invitation email
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user || user.email !== invitationData.invited_email) {
-          setError('L\'email dell\'utente non corrisponde all\'invito')
+        // Set the session using the access token and refresh token
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        })
+
+        if (sessionError) {
+          setError(`Errore nella verifica del token: ${sessionError.message}`)
           return
         }
 
-        setInvitation(invitationData)
-      } else {
-        // No studio token - this is just a basic password setup
+        // Get user data
         const { data: { user } } = await supabase.auth.getUser()
-        if (!user) {
+        if (!user || !user.email) {
           setError('Utente non trovato')
           return
         }
-        
-        // Get the user's profile from the new user_profiles system
-        let userRole = 'studio_member' // default fallback
-        let studioName = 'Studio di Test' // default fallback
-        let studioId = 'mock'
-        
-        try {
-          // Get user profile with studio information
-          const profile = await getUserProfile(user.id)
-          if (profile) {
-            userRole = profile.role
-            studioId = profile.studio_id || 'mock'
+
+        // Get user profile directly from supabase client
+        const { data: profile, error: profileError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single()
+
+        // Set default values if profile is not found or there's an error
+        let userRole: 'studio_admin' | 'studio_member' = 'studio_member'
+        let studioName: string | null = null
+        let profileFound = false
+
+        if (profile && !profileError) {
+          // Profile found successfully
+          profileFound = true
+          userRole = profile.role
+          
+          // Get studio name if user has a studio
+          if (profile.studio_id) {
+            const { data: studio } = await supabase
+              .from('studios')
+              .select('name')
+              .eq('id', profile.studio_id)
+              .single()
             
-            // Get studio name if user has a studio
-            if (profile.studio_id) {
-              const { data: studio } = await supabase
-                .from('studios')
-                .select('name')
-                .eq('id', profile.studio_id)
-                .single()
-              
-              if (studio) {
-                studioName = studio.name
-              }
+            if (studio) {
+              studioName = studio.name
             }
           }
-        } catch (error) {
-          console.log('Could not fetch user profile, using default:', error)
+        } else {
+          // Profile not found or error - use defaults but still allow password setup
+          console.warn('User profile not found or error:', profileError)
+          // Don't return here - continue with default values
         }
-        
-        // Create a mock invitation for display purposes with actual user role
-        console.log('Setting invitation with role:', userRole, 'for user:', user.email)
-        setInvitation({
-          id: 'mock',
-          studio_id: studioId,
-          invited_email: user.email!,
-          invited_by: 'mock',
-          role: userRole as any,
-          status: 'pending',
-          token: 'mock',
-          message: null,
-          created_at: new Date().toISOString(),
-          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          accepted_at: null,
-          declined_at: null,
-          updated_at: new Date().toISOString(),
-          studio: {
-            id: studioId,
-            name: studioName,
-            slug: 'test-studio'
-          },
-          inviter: {
-            id: 'mock',
-            email: 'admin@example.com',
-            raw_user_meta_data: {}
-          }
+
+        setUserData({
+          email: user.email,
+          role: userRole,
+          studioName,
+          profileFound
         })
+
+      } catch (err) {
+        console.error('Error verifying tokens:', err)
+        setError('Errore durante la verifica dei token')
+      } finally {
+        setLoading(false)
       }
-      
-      setTokenVerified(true)
-    } catch (err) {
-      console.error('Error verifying tokens:', err)
-      setError('Errore durante la verifica dei token')
-    } finally {
-      setLoading(false)
     }
-  }
+
+    verifyTokensAndFetchUserData()
+  }, [])
 
   const handlePasswordSet = () => {
-    // Redirect to studio after successful password setup
     router.push('/studio')
   }
 
@@ -210,19 +164,22 @@ export default function InvitationPage() {
     )
   }
 
-  if (tokenVerified && invitation) {
+  if (userData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Imposta la tua Password</CardTitle>
             <CardDescription>
-              Completa la configurazione del tuo account per {invitation.studio.name}
+              Completa la configurazione del tuo account
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <InvitationPasswordForm 
-              invitation={invitation}
+            <SetPasswordForm 
+              email={userData.email}
+              role={userData.role}
+              studioName={userData.studioName}
+              profileFound={userData.profileFound}
               onPasswordSet={handlePasswordSet}
             />
           </CardContent>

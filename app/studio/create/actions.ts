@@ -2,8 +2,6 @@
 
 import { createStudio } from '@/lib/supabase/studios'
 import { generateSlug } from '@/lib/supabase/studios'
-import { createClient } from '@/lib/supabase/server'
-import { isStudioAdmin, canUserCreateStudio } from '@/lib/supabase/user-profiles'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -32,41 +30,8 @@ const createStudioSchema = z.object({
 })
 
 export async function createStudioAction(_: any, formData: FormData) {
-  const supabase = await createClient()
-  
-  // Check authentication first
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
-  console.log('Auth check - User:', user?.id, 'Error:', authError)
-  
-  if (authError || !user) {
-    console.error('Authentication error:', authError)
-    return { 
-      error: 'Devi essere autenticato per creare uno studio. Per favore effettua il login.',
-      formData: {}
-    }
-  }
-  
-  console.log('Authenticated user:', user.id)
-  
-  // Check if user is a studio admin
-  const isAdmin = await isStudioAdmin(user.id)
-  if (!isAdmin) {
-    return { 
-      error: 'Solo gli amministratori studio possono creare uno studio.',
-      formData: {}
-    }
-  }
-  
-  // Check if user can create a studio (no existing studio)
-  const canCreate = await canUserCreateStudio(user.id)
-  if (!canCreate) {
-    return { 
-      error: 'Hai già uno studio. Un utente può creare solo uno studio.',
-      formData: {}
-    }
-  }
-  
+  //HERE WE JUST CHECK THE FORM IMPUT AND WE CALL THE CORRECT SUPABASE LIB FUNCTION TO CREATE THE STUDIO ALL THE LOGIC IS THERE
+
   // Extract form data
   const rawData = {
     name: formData.get('name') as string,
@@ -83,14 +48,20 @@ export async function createStudioAction(_: any, formData: FormData) {
     codice_fiscale: formData.get('codice_fiscale') as string,
     business_name: formData.get('business_name') as string,
   }
-  console.log(rawData)
   // Validate with Zod
   const validationResult = createStudioSchema.safeParse(rawData)
-  console.log(validationResult)
   if (!validationResult.success) {
-    const firstError = validationResult.error.errors[0]
+    // Return all field errors, not just the first one
+    const fieldErrors: Record<string, string> = {}
+    validationResult.error.issues.forEach((error) => {
+      if (error.path.length > 0) {
+        fieldErrors[error.path[0] as string] = error.message
+      }
+    })
+    
     return { 
-      error: firstError.message,
+      error: 'Ci sono errori di validazione nel form',
+      fieldErrors,
       formData: rawData
     }
   }
@@ -115,27 +86,22 @@ export async function createStudioAction(_: any, formData: FormData) {
       codice_fiscale: data.codice_fiscale?.trim(),
       business_name: data.business_name?.trim(),
     })
-    console.log(studio, error)
     if (error) {
       return { 
         error,
+        fieldErrors: {},
         formData: rawData
       }
     }
-
-    if (studio) {
-      // Revalidate the studio pages to show the new studio
-      revalidatePath('/studio')
-      // Redirect to the studio dashboard
-      redirect('/studio')
-    }
-
-    return { success: true }
   } catch (err) { 
     console.error('Error creating studio:', err)
     return { 
       error: 'Errore durante la creazione dello studio',
+      fieldErrors: {},
       formData: rawData
     }
   }
+  revalidatePath('/studio')
+  // Redirect to the studio dashboard
+  redirect('/studio')
 }

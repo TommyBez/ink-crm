@@ -1,5 +1,4 @@
 import { Menu } from 'lucide-react'
-import { redirect } from 'next/navigation'
 import { AppSidebar } from '@/components/studio/app-sidebar'
 import { UserRoleBadge } from '@/components/studio/user-role-badge'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
@@ -10,6 +9,7 @@ import { getUserProfile } from '@/lib/supabase/user-profiles'
 
 export default async function StudioLayout({
   children,
+  
 }: {
   children: React.ReactNode
 }) {
@@ -17,26 +17,6 @@ export default async function StudioLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
-  // Redirect to login if user is not authenticated
-  if (!user) {
-    redirect('/auth/login')
-  }
-
-  // Get user profile to check role and studio assignment
-  const profile = await getUserProfile(user.id)
-  
-  if (profile) {
-    // If user is studio_admin without a studio, redirect to create studio
-    if (profile.role === 'studio_admin' && !profile.studio_id) {
-      redirect('/studio/create')
-    }
-    
-    // If user is studio_member without a studio, redirect to waiting page
-    if (profile.role === 'studio_member' && !profile.studio_id) {
-      redirect('/waiting')
-    }
-  }
 
   return (
     <SidebarProvider defaultOpen={false}>
@@ -58,7 +38,7 @@ export default async function StudioLayout({
                 <div className="flex items-center gap-4">
                   <UserRoleBadge />
                   <span className="text-muted-foreground text-sm">
-                    {user.email}
+                    {user?.email}
                   </span>
                 </div>
               </div>
